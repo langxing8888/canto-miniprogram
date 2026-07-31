@@ -247,7 +247,7 @@ page {
   padding: 8rpx 4rpx;
 }
 
-/* ===== ³öÇÚ¿¼ºË¿¨ ===== */
+/* ===== ï¿½ï¿½ï¿½Ú¿ï¿½ï¿½Ë¿ï¿½ ===== */
 .attend-card { display: flex; align-items: center; background: #fff; border-radius: 20rpx; padding: 28rpx 20rpx; margin-bottom: 20rpx; box-shadow: 0 4rpx 14rpx rgba(31,41,55,0.05); }
 .at-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6rpx; }
 .at-num { font-size: 40rpx; font-weight: 800; color: #2b3440; }
@@ -255,7 +255,7 @@ page {
 .at-num.at-absent { color: #e5342e; }
 .at-label { font-size: 22rpx; color: #8a94a3; }
 .at-div { width: 2rpx; height: 56rpx; background: #eef0f3; }
-/* Ã¿½Ú¿Î³öÇÚ»Õ±ê */
+/* Ã¿ï¿½Ú¿Î³ï¿½ï¿½Ú»Õ±ï¿½ */
 .bk-attend { font-size: 22rpx; font-weight: 700; padding: 2rpx 14rpx; border-radius: 999rpx; margin-left: 12rpx; }
 .bk-attend.a-present { background: #e8f6ee; color: #12a150; }
 .bk-attend.a-leave { background: #fff3e0; color: #e8930c; }
