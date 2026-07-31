@@ -1,0 +1,25 @@
+<view class="page" wx:if="{{doc}}">
+  <!-- 顶部 Hero -->
+  <view class="doc-hero">
+    <view class="hero-icon">📜</view>
+    <view class="hero-info">
+      <text class="doc-title">{{doc.title}}</text>
+      <text class="doc-updated">{{doc.updated}}</text>
+    </view>
+  </view>
+
+  <!-- 条款卡片 -->
+  <view class="doc-card" wx:for="{{doc.sections}}" wx:key="h">
+    <view class="sec-head">
+      <view class="sec-bar" />
+      <text class="sec-h">{{item.h}}</text>
+    </view>
+    <text class="sec-p">{{item.p}}</text>
+  </view>
+
+  <view class="doc-foot">
+    <view class="foot-line" />
+    <text>「粤讲粤醒目」运营团队</text>
+    <view class="foot-line" />
+  </view>
+</view>

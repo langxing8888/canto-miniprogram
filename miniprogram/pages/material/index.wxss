@@ -1,0 +1,102 @@
+page {
+  background: #edeff2;
+}
+
+.wrap {
+  /* 页面级滚动（canvas 原生组件在 scroll-view 内会脱离滚动流导致笔迹错位，页面滚动无此问题） */
+  padding-bottom: 40rpx;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16rpx 24rpx;
+  background: #ffffff;
+  border-bottom: 1rpx solid #e8ebef;
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.pg-btn {
+  font-size: 26rpx;
+  color: #FF6B35;
+  font-weight: 600;
+  padding: 10rpx 22rpx;
+  background: #fff2ea;
+  border-radius: 999rpx;
+}
+
+.pg-btn.dis {
+  color: #c2c9d1;
+  background: #f2f4f6;
+}
+
+.pg-ind {
+  font-size: 26rpx;
+  color: #2b3440;
+  font-weight: 700;
+  min-width: 100rpx;
+  text-align: center;
+}
+
+.anno-switch {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.save-btn {
+  margin-left: 10rpx;
+  padding: 8rpx 20rpx;
+  background: linear-gradient(135deg, #FF9A5A, #E5541E);
+  color: #fff;
+  font-size: 24rpx;
+  font-weight: 600;
+  border-radius: 999rpx;
+}
+
+.sw-label {
+  font-size: 24rpx;
+  color: #6b7684;
+}
+
+.sync-tip {
+  font-size: 22rpx;
+  color: #9aa3ae;
+  text-align: center;
+  padding: 10rpx 0 4rpx;
+}
+
+.page-scroll {
+  flex: 1;
+  min-height: 0;
+}
+
+.page-box {
+  position: relative;
+  margin: 20rpx;
+  background: #ffffff;
+  border-radius: 12rpx;
+  overflow: visible;
+  box-shadow: 0 6rpx 24rpx rgba(31, 41, 55, 0.10);
+}
+
+.page-img {
+  display: block;
+  width: 100%;
+}
+
+.ink {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+}

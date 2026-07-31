@@ -1,0 +1,64 @@
+<view class="page">
+  <!-- 继续学习（最近未看完） -->
+  <view class="continue" wx:if="{{continueCard}}" bindtap="onContinue">
+    <view class="ct-play"><view class="ct-tri"></view></view>
+    <view class="ct-info">
+      <text class="ct-label">继续学习</text>
+      <text class="ct-name">{{continueCard.name}}</text>
+      <view class="ct-bar"><view class="ct-fill" style="width:{{continueCard.pct}}%"></view></view>
+    </view>
+    <text class="ct-pct">{{continueCard.pct}}%</text>
+  </view>
+
+  <!-- 分类筛选 -->
+  <scroll-view scroll-x class="cats" enhanced show-scrollbar="{{false}}">
+    <view
+      wx:for="{{categories}}"
+      wx:key="*this"
+      class="cat {{activeCat === item ? 'active' : ''}}"
+      data-cat="{{item}}"
+      bindtap="onTapCat"
+    >{{item}}</view>
+  </scroll-view>
+
+  <!-- 课程列表 -->
+  <view class="c-list">
+    <view
+      wx:for="{{filtered}}"
+      wx:key="id"
+      class="c-card"
+      data-id="{{item.id}}"
+      bindtap="onTapCourse"
+    >
+      <view class="c-cover" style="{{item.coverImg ? '' : 'background: linear-gradient(135deg, ' + item.cover + 'cc, ' + item.cover + ')'}}">
+        <image wx:if="{{item.coverImg}}" class="c-cover-img" src="{{item.coverImg}}" mode="aspectFill" />
+        <text class="c-cover-text" wx:if="{{!item.coverImg}}">{{item.name}}</text>
+        <view class="c-play">
+          <view class="c-play-tri" />
+        </view>
+        <text class="c-free" wx:if="{{item.freeTrial}}">免费试看</text>
+        <text class="c-badge finished" wx:if="{{item.finished}}">✓ 已学完</text>
+        <text class="c-badge student" wx:elif="{{item.studentOnly}}">学员专享</text>
+        <text class="c-badge lock" wx:if="{{item.locked}}">🔒 ¥{{item.priceYuan}}</text>
+        <text class="c-badge owned" wx:elif="{{item.price > 0 && item.owned}}">已购</text>
+        <!-- 底部进度条（看过未看完） -->
+        <view class="c-progress" wx:if="{{item.watched && !item.finished}}">
+          <view class="c-progress-fill" style="width:{{item.pct}}%"></view>
+        </view>
+      </view>
+      <view class="c-body">
+        <text class="c-name">{{item.name}}</text>
+        <text class="c-intro">{{item.intro}}</text>
+        <view class="c-meta">
+          <text class="c-tag">{{item.category}}</text>
+          <text class="c-m">{{item.lessons}} 课时</text>
+          <text class="c-m">{{item.duration}}</text>
+          <text class="c-m views" wx:if="{{item.views}}">{{item.views}} 人学过</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="foot-tip" wx:if="{{filtered.length}}">支持倍速播放 · 断点续播 · 学完可进对应关卡练习</view>
+  <view class="empty" wx:if="{{!filtered.length}}">该分类暂无课程</view>
+</view>

@@ -1,0 +1,27 @@
+.page {
+  background: #000;
+  min-height: 100vh;
+}
+
+.player {
+  width: 100%;
+  height: 440rpx;
+}
+
+.tips {
+  padding: 30rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.tips-title {
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: 700;
+}
+
+.tips-sub {
+  color: #8a94a0;
+  font-size: 22rpx;
+}

@@ -1,0 +1,178 @@
+page {
+  background: #f5f6f8;
+}
+
+.wrap {
+  padding: 20rpx 24rpx 60rpx;
+}
+
+/* ===== 月份切换 ===== */
+.cal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10rpx 8rpx 20rpx;
+}
+
+.cal-nav {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  color: #FF6B35;
+  font-weight: 700;
+  box-shadow: 0 4rpx 12rpx rgba(31, 41, 55, 0.06);
+}
+
+.cal-title {
+  font-size: 32rpx;
+  font-weight: 800;
+  color: #2b3440;
+}
+
+.cal-count {
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #FF6B35;
+}
+
+/* ===== 月历 ===== */
+.cal-panel {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 20rpx 12rpx 16rpx;
+  box-shadow: 0 4rpx 16rpx rgba(31, 41, 55, 0.05);
+}
+
+.cal-week {
+  display: flex;
+  margin-bottom: 8rpx;
+}
+
+.cal-week text {
+  flex: 1;
+  text-align: center;
+  font-size: 22rpx;
+  color: #9aa3ae;
+}
+
+.cal-grid {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.cal-cell {
+  width: 14.28%;
+  height: 96rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4rpx;
+  border-radius: 14rpx;
+}
+
+.cal-day {
+  font-size: 28rpx;
+  color: #2b3440;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.cal-cell.today .cal-day {
+  color: #FF6B35;
+}
+
+.cal-cell.sel {
+  background: linear-gradient(135deg, #FF9A5A, #E5541E);
+}
+
+.cal-cell.sel .cal-day,
+.cal-cell.sel .cal-badge {
+  color: #fff;
+}
+
+.cal-badge {
+  font-size: 17rpx;
+  color: #FF6B35;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* ===== 当日课程 ===== */
+.day-title {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #2b3440;
+  margin: 30rpx 6rpx 18rpx;
+}
+
+.empty {
+  text-align: center;
+  color: #9aa3ae;
+  font-size: 25rpx;
+  padding: 50rpx 0;
+}
+
+.lesson-row {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  margin-bottom: 18rpx;
+}
+
+.ls-time {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4rpx;
+  width: 90rpx;
+}
+
+.ls-start {
+  font-size: 28rpx;
+  font-weight: 800;
+  color: #2b3440;
+}
+
+.ls-end {
+  font-size: 22rpx;
+  color: #9aa3ae;
+}
+
+.ls-card {
+  flex: 1;
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 20rpx 24rpx;
+  box-shadow: 0 4rpx 12rpx rgba(31, 41, 55, 0.05);
+}
+
+.ls-name {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #2b3440;
+}
+
+.ls-sub {
+  font-size: 21rpx;
+  color: #9aa3ae;
+  margin-top: 6rpx;
+}
+
+.ls-status {
+  font-size: 22rpx;
+  flex-shrink: 0;
+}
+
+.ls-status.booked {
+  color: #12a150;
+}
+
+.ls-status.done {
+  color: #9aa3ae;
+}

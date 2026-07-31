@@ -1,0 +1,255 @@
+page {
+  background: #f5f6f8;
+}
+
+.wrap {
+  padding: 16rpx 24rpx 60rpx;
+}
+
+/* ===== 日历头 ===== */
+.cal-head {
+  display: flex;
+  align-items: center;
+  padding: 12rpx 8rpx 4rpx;
+}
+
+.cal-title {
+  font-size: 34rpx;
+  font-weight: 800;
+  color: #2b3440;
+  flex: 1;
+}
+
+.cal-nav {
+  display: flex;
+  gap: 8rpx;
+}
+
+.nav-btn {
+  width: 56rpx;
+  height: 56rpx;
+  line-height: 52rpx;
+  text-align: center;
+  font-size: 40rpx;
+  color: #E5541E;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 2rpx 8rpx rgba(31, 41, 55, 0.06);
+}
+
+/* ===== 星期表头 ===== */
+.cal-weekhead {
+  display: flex;
+  margin-top: 10rpx;
+}
+
+.wh {
+  flex: 1;
+  text-align: center;
+  font-size: 24rpx;
+  color: #9aa3ae;
+  padding: 10rpx 0;
+}
+
+.wh.weekend {
+  color: #E5541E;
+}
+
+/* ===== 日期网格 ===== */
+.cal-grid {
+  display: flex;
+  flex-wrap: wrap;
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 8rpx 4rpx 12rpx;
+  box-shadow: 0 4rpx 14rpx rgba(31, 41, 55, 0.05);
+}
+
+.cal-cell {
+  width: 14.28%;
+  height: 92rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.cc-day {
+  width: 62rpx;
+  height: 62rpx;
+  line-height: 62rpx;
+  text-align: center;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #2b3440;
+  border-radius: 50%;
+}
+
+.cc-day.today {
+  background: #E5541E;
+  color: #fff;
+  font-size: 26rpx;
+}
+
+.cal-cell.sel .cc-day {
+  background: #FF9A5A;
+  color: #fff;
+}
+
+.cal-cell.sel .cc-day.today {
+  background: #E5541E;
+}
+
+.cal-cell.out .cc-day {
+  color: #d0d5dd;
+}
+
+.cal-cell.disabled .cc-day {
+  color: #d0d5dd;
+}
+
+.cc-dot {
+  position: absolute;
+  bottom: 12rpx;
+  width: 10rpx;
+  height: 10rpx;
+  border-radius: 50%;
+  background: #E5541E;
+}
+
+.cc-dot.mine {
+  background: #2f6bd8;
+}
+
+/* 今天：点移进橙色圆内、显白点，不再吊在圆下面 */
+.cc-dot.in-circle {
+  bottom: 22rpx;
+  background: #fff;
+}
+
+.cal-cell.sel .cc-dot {
+  background: #fff;
+}
+
+/* ===== 展开/收起（小胶囊 + CSS 箭头） ===== */
+.cal-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10rpx;
+  width: 200rpx;
+  margin: 12rpx auto 2rpx;
+  padding: 10rpx 0;
+  background: #f2f4f8;
+  border-radius: 999rpx;
+}
+
+.cal-toggle:active {
+  background: #e8ebf0;
+}
+
+.tg-txt {
+  font-size: 24rpx;
+  color: #8a94a3;
+}
+
+.tg-chev {
+  width: 14rpx;
+  height: 14rpx;
+  border-right: 3rpx solid #8a94a3;
+  border-bottom: 3rpx solid #8a94a3;
+  transform: rotate(45deg) translate(-2rpx, -2rpx);
+  transition: transform 0.2s;
+}
+
+.tg-chev.up {
+  transform: rotate(-135deg) translate(-2rpx, -2rpx);
+}
+
+.tip {
+  font-size: 23rpx;
+  color: #9aa3ae;
+  text-align: center;
+  margin: 6rpx 0 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+}
+
+/* 说明里的橙点图例 */
+.lg-dot {
+  display: inline-block;
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  background: #E5541E;
+}
+
+.empty {
+  text-align: center;
+  color: #9aa3ae;
+  font-size: 26rpx;
+  padding: 80rpx 40rpx;
+  line-height: 1.8;
+}
+
+/* ===== 时段列表 ===== */
+.slot-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  margin-top: 8rpx;
+}
+
+.slot-card {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 18rpx;
+  padding: 26rpx 28rpx;
+  box-shadow: 0 4rpx 14rpx rgba(31, 41, 55, 0.05);
+}
+
+.slot-card:active {
+  background: #fff7f3;
+}
+
+.slot-card.booked {
+  background: #f3f6fb;
+}
+
+.slot-card.booked:active {
+  background: #eaf0f8;
+}
+
+.slot-time {
+  font-size: 32rpx;
+  font-weight: 800;
+  color: #2b3440;
+  width: 220rpx;
+}
+
+.slot-teacher {
+  flex: 1;
+  font-size: 26rpx;
+  color: #6b7684;
+}
+
+.slot-tag {
+  font-size: 26rpx;
+  font-weight: 700;
+  padding: 14rpx 34rpx;
+  border-radius: 999rpx;
+}
+
+.slot-tag.book {
+  background: linear-gradient(135deg, #FF9A5A, #E5541E);
+  color: #fff;
+}
+
+.slot-tag.done {
+  background: #e5eaf2;
+  color: #6b7684;
+}

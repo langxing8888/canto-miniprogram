@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>粤语学习 · 后台管理</title>
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+<div class="layout">
+  <!-- 侧边栏 -->
+  <aside class="sidebar">
+    <div class="logo">
+      <span class="logo-icon">粤</span>
+      <div class="logo-text">
+        <b>粤语学习后台</b>
+        <small>静态原型 v0.1</small>
+      </div>
+    </div>
+    <nav class="menu">
+      <a class="menu-item active" data-page="dashboard">📊 数据概览</a>
+      <a class="menu-item" data-page="questions">📚 题库管理</a>
+      <a class="menu-item" data-page="qstats">📈 题目统计</a>
+      <a class="menu-item" data-page="levels">🧩 关卡组装</a>
+      <a class="menu-item" data-page="courses">🎬 录播课管理</a>
+    </nav>
+    <div class="sidebar-foot">数据为本地 Mock<br>刷新不丢失（localStorage）</div>
+  </aside>
+
+  <!-- 主区域 -->
+  <main class="main">
+    <header class="topbar">
+      <h1 id="pageTitle">数据概览</h1>
+      <div class="topbar-right">
+        <span class="admin-chip">👩‍🏫 管理员</span>
+      </div>
+    </header>
+
+    <!-- ============ 数据概览 ============ -->
+    <section class="page" id="page-dashboard">
+      <h2 class="sec-title">教务数据</h2>
+      <div class="cards" id="eduCards"></div>
+
+      <div class="grid-2">
+        <div class="panel">
+          <h3>留存率 <small>N日留存率 =（注册后第N天仍学习人数 / 当天新增）×100%</small></h3>
+          <div id="retentionBars"></div>
+        </div>
+        <div class="panel">
+          <h3>学习效果（正确率）<small>正确率 =（全部答对次数 / 全部有效答题次数）×100%</small></h3>
+          <div id="accuracyBars"></div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel">
+          <h3>近7日正确率趋势</h3>
+          <div class="chart" id="trendAccuracy"></div>
+        </div>
+        <div class="panel">
+          <h3>近7日活跃学生趋势 <small>活跃 = 完成一个关卡 / 学习满3分钟</small></h3>
+          <div class="chart" id="trendActive"></div>
+        </div>
+      </div>
+
+      <h2 class="sec-title">学习行为</h2>
+      <div class="cards" id="behaviorCards"></div>
+
+      <h2 class="sec-title">关卡完成情况</h2>
+      <div class="cards" id="funnelCards"></div>
+
+      <h2 class="sec-title">重点关注学生</h2>
+      <div class="grid-2">
+        <div class="panel alert-panel warn">
+          <div class="alert-head">
+            <h3>⚠️ 即将流失的学生</h3>
+            <span class="big-num" id="churnNum"></span>
+          </div>
+          <ul class="rule-list" id="churnRules"></ul>
+          <div class="panel-actions">
+            <button class="btn ghost" onclick="mockExport('流失名单')">导出名单</button>
+            <button class="btn primary" onclick="mockRemind('流失学生')">发送学习提醒</button>
+          </div>
+        </div>
+        <div class="panel alert-panel good">
+          <div class="alert-head">
+            <h3>🔥 高活跃学生</h3>
+            <span class="big-num" id="highNum"></span>
+          </div>
+          <ul class="rule-list" id="highRules"></ul>
+          <div class="panel-actions">
+            <button class="btn ghost" onclick="mockExport('高活跃名单')">导出名单</button>
+            <button class="btn primary" onclick="mockRemind('高活跃学生')">发送学习提醒</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 题库管理 ============ -->
+    <section class="page hidden" id="page-questions">
+      <div class="toolbar">
+        <div class="filters">
+          <select id="qTypeFilter">
+            <option value="">全部题型</option>
+            <option value="pic_choice">图片选择题</option>
+            <option value="choice">文字选择题</option>
+            <option value="sentence_order">选词组句</option>
+            <option value="speaking">AI纠音题</option>
+          </select>
+          <select id="qStatusFilter">
+            <option value="">全部状态</option>
+            <option value="published">已发布</option>
+            <option value="draft">草稿</option>
+          </select>
+          <input type="text" id="qSearch" placeholder="搜索题干 / 粤拼 / ID">
+        </div>
+        <div class="actions">
+          <button class="btn ghost" onclick="openImportModal()">📥 Excel 批量导入</button>
+          <button class="btn primary" onclick="openQuestionModal()">＋ 单题录入</button>
+        </div>
+      </div>
+      <div class="panel table-panel">
+        <table id="qTable">
+          <thead>
+            <tr>
+              <th>ID</th><th>题型</th><th>题干</th><th>粤拼</th><th>音频</th>
+              <th>版本</th><th>状态</th><th>被关卡引用</th><th>操作</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ 题目统计 ============ -->
+    <section class="page hidden" id="page-qstats">
+      <div class="toolbar">
+        <div class="filters">
+          <select id="sTypeFilter">
+            <option value="">全部题型</option>
+            <option value="pic_choice">图片选择题</option>
+            <option value="choice">文字选择题</option>
+            <option value="sentence_order">选词组句</option>
+            <option value="speaking">AI纠音题</option>
+          </select>
+          <select id="sSort">
+            <option value="rate_asc">正确率 从低到高</option>
+            <option value="rate_desc">正确率 从高到低</option>
+            <option value="skip_desc">跳过率 从高到低</option>
+            <option value="disc_desc">区分度 从高到低</option>
+          </select>
+        </div>
+        <div class="actions">
+          <button class="btn ghost" onclick="mockExport('题目统计报表')">导出报表</button>
+        </div>
+      </div>
+      <div class="panel table-panel wide-table">
+        <table id="sTable">
+          <thead>
+            <tr>
+              <th>ID</th><th>题干</th><th>作答人数</th><th>作答次数</th><th>正确率</th>
+              <th>首次正确率</th><th>复习正确率</th><th>平均答题时间</th><th>跳过率</th>
+              <th>重复错误率</th><th>选项分布</th><th>区分度</th>
+              <th>音频失败率</th><th>图片失败率</th><th>语音识别失败率</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ 关卡组装 ============ -->
+    <section class="page hidden" id="page-levels">
+      <div class="toolbar">
+        <span class="hint">题目与关卡为多对多关系，同一道题可被多个关卡引用；修改题目内容，所有引用关卡自动同步</span>
+        <div class="actions">
+          <button class="btn primary" onclick="openLevelModal()">＋ 新建关卡</button>
+        </div>
+      </div>
+      <div class="level-grid" id="levelGrid"></div>
+    </section>
+
+    <!-- ============ 录播课管理 ============ -->
+    <section class="page hidden" id="page-courses">
+      <div class="toolbar">
+        <span class="hint">视频上传至对象存储 + CDN 分发；防盗链 / 倍速播放 / 断点续播由播放端支持</span>
+        <div class="actions">
+          <button class="btn primary" onclick="openCourseModal()">＋ 上传课程</button>
+        </div>
+      </div>
+      <div class="course-grid" id="courseGrid"></div>
+    </section>
+  </main>
+</div>
+
+<!-- ============ 弹窗：单题录入 / 编辑 ============ -->
+<div class="modal-mask hidden" id="questionModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="qModalTitle">单题录入</h3>
+      <span class="modal-close" onclick="closeModal('questionModal')">✕</span>
+    </div>
+    <div class="modal-body">
+      <div class="version-tip hidden" id="versionTip">
+        ⚠️ 该题已发布并产生作答数据，保存修改将创建 <b>新版本</b>；历史作答记录继续绑定旧版本，新关卡/新作答使用新版本。
+      </div>
+      <div class="form-row">
+        <label>题型</label>
+        <select id="fType" onchange="renderTypeFields()">
+          <option value="pic_choice">图片选择题（听音选图 2×2）</option>
+          <option value="choice">文字选择题（翻译/辨析/汉字↔粤拼/听音选）</option>
+          <option value="sentence_order">选词组句</option>
+          <option value="speaking">AI纠音题</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>题干 / 粤语句子</label>
+        <input type="text" id="fText" placeholder="如：唔该，埋单！">
+      </div>
+      <div class="form-row">
+        <label>粤拼</label>
+        <input type="text" id="fJyut" placeholder="如：m4 goi1, maai4 daan1">
+      </div>
+      <!-- 按题型切换的字段模板 -->
+      <div id="typeFields"></div>
+      <div class="form-row">
+        <label>标准音频</label>
+        <div class="upload-row">
+          <button class="btn ghost sm" onclick="mockTts()">🔊 调用 TTS 生成</button>
+          <button class="btn ghost sm" onclick="mockUpload('MP3')">📤 上传 MP3</button>
+          <span class="upload-name" id="fAudioName">未生成</span>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>状态</label>
+        <select id="fStatus">
+          <option value="draft">草稿</option>
+          <option value="published">发布</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" onclick="closeModal('questionModal')">取消</button>
+      <button class="btn primary" onclick="saveQuestion()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 弹窗：Excel 导入 ============ -->
+<div class="modal-mask hidden" id="importModal">
+  <div class="modal narrow">
+    <div class="modal-head">
+      <h3>Excel 批量导入</h3>
+      <span class="modal-close" onclick="closeModal('importModal')">✕</span>
+    </div>
+    <div class="modal-body">
+      <p class="import-tip">按模板填写后一次性导入几百题。列：题型 / 题干 / 粤拼 / 选项A-D / 正确答案 / 词块(组句) / 干扰词。</p>
+      <button class="btn ghost" onclick="mockExport('题目导入模板.xlsx')">⬇️ 下载 Excel 模板</button>
+      <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+        <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" hidden>
+        <span id="dropText">点击选择或拖入 Excel 文件</span>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" onclick="closeModal('importModal')">取消</button>
+      <button class="btn primary" onclick="mockImport()">开始导入</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 弹窗：新建 / 编辑关卡 ============ -->
+<div class="modal-mask hidden" id="levelModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="lModalTitle">新建关卡</h3>
+      <span class="modal-close" onclick="closeModal('levelModal')">✕</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <label>关卡名称</label>
+        <input type="text" id="lName" placeholder='如：第1关：茶餐厅点单'>
+      </div>
+      <div class="form-row">
+        <label>关卡描述</label>
+        <input type="text" id="lDesc" placeholder="一句话描述本关内容">
+      </div>
+      <div class="form-row inline">
+        <label>通过门槛</label>
+        <span>做对 <input type="number" id="lThreshold" value="8" min="1" style="width:60px"> 题以上通关（建议 10 题/关）</span>
+      </div>
+      <div class="form-row inline">
+        <label>题目来源</label>
+        <label class="radio"><input type="radio" name="lSource" value="manual" checked onchange="toggleLevelSource()"> 从题库勾选</label>
+        <label class="radio"><input type="radio" name="lSource" value="auto" onchange="toggleLevelSource()"> 按规则自动抽取</label>
+      </div>
+      <div id="lManualBox">
+        <div class="form-row">
+          <label>勾选题目 <span class="picked-count" id="pickedCount">已选 0 题</span></label>
+          <input type="text" id="lQSearch" placeholder="搜索题目…" oninput="renderLevelPicker()">
+          <div class="picker" id="lPicker"></div>
+        </div>
+      </div>
+      <div id="lAutoBox" class="hidden">
+        <div class="form-row inline">
+          <label>抽取规则</label>
+          <span>
+            从 <select id="lAutoType"><option value="">全部题型</option><option value="pic_choice">图片选择题</option><option value="choice">文字选择题</option><option value="sentence_order">选词组句</option><option value="speaking">AI纠音题</option></select>
+            随机抽 <input type="number" id="lAutoCount" value="10" min="1" style="width:60px"> 题
+          </span>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>状态</label>
+        <select id="lStatus">
+          <option value="draft">草稿</option>
+          <option value="online">上线</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" onclick="closeModal('levelModal')">取消</button>
+      <button class="btn primary" onclick="saveLevel()">保存关卡</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 弹窗：上传课程 ============ -->
+<div class="modal-mask hidden" id="courseModal">
+  <div class="modal narrow">
+    <div class="modal-head">
+      <h3 id="cModalTitle">上传课程</h3>
+      <span class="modal-close" onclick="closeModal('courseModal')">✕</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-row"><label>课程名称</label><input type="text" id="cName" placeholder="如：粤语发音入门"></div>
+      <div class="form-row"><label>课程简介</label><input type="text" id="cIntro" placeholder="一句话简介"></div>
+      <div class="form-row">
+        <label>课程分类</label>
+        <select id="cCategory">
+          <option>发音入门</option><option>词汇拓展</option><option>商务粤语</option><option>其他</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>封面图</label>
+        <div class="upload-row"><button class="btn ghost sm" onclick="mockUpload('封面图')">📤 上传封面</button></div>
+      </div>
+      <div class="form-row">
+        <label>视频文件（MP4）</label>
+        <div class="upload-row"><button class="btn ghost sm" onclick="mockUpload('MP4 视频')">📤 上传视频</button><span class="upload-name">上传至对象存储，转码多码率</span></div>
+      </div>
+      <div class="form-row inline">
+        <label>免费试看</label>
+        <label class="radio"><input type="radio" name="cFree" value="1"> 是</label>
+        <label class="radio"><input type="radio" name="cFree" value="0" checked> 否</label>
+      </div>
+      <div class="form-row">
+        <label>上架状态</label>
+        <select id="cStatus"><option value="online">上架</option><option value="offline">下架</option></select>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" onclick="closeModal('courseModal')">取消</button>
+      <button class="btn primary" onclick="saveCourse()">保存课程</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast hidden" id="toast"></div>
+
+<script src="mock-data.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

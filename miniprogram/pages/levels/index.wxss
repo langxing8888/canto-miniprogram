@@ -1,0 +1,523 @@
+.page {
+  padding: 30rpx 30rpx 180rpx;
+}
+
+/* 课表速览条 */
+.lesson-bar {
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+  margin-bottom: 22rpx;
+  background: #fff;
+  border: 1rpx solid #ffe1d1;
+  border-radius: 16rpx;
+  padding: 20rpx 24rpx;
+  box-shadow: 0 4rpx 12rpx rgba(255, 107, 53, 0.08);
+}
+
+.lb-dot {
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 50%;
+  background: #FF6B35;
+  box-shadow: 0 0 0 6rpx rgba(255, 107, 53, 0.15);
+}
+
+.lb-text {
+  flex: 1;
+  font-size: 25rpx;
+  font-weight: 600;
+  color: #2b3440;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.lb-go {
+  font-size: 24rpx;
+  font-weight: 700;
+  color: #FF6B35;
+}
+
+/* ===== 版本选择弹窗 ===== */
+.ed-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(20, 24, 30, 0.62);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ed-panel {
+  width: 640rpx;
+  background: #fff;
+  border-radius: 28rpx;
+  padding: 44rpx 32rpx 36rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ed-title {
+  font-size: 36rpx;
+  font-weight: 800;
+  color: #2b3440;
+}
+
+.ed-sub {
+  font-size: 23rpx;
+  color: #9aa3ae;
+  margin-top: 10rpx;
+}
+
+.ed-cards {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 32rpx;
+  width: 100%;
+}
+
+.ed-card {
+  flex: 1;
+  border-radius: 20rpx;
+  padding: 30rpx 22rpx 26rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.ed-card.student {
+  background: linear-gradient(160deg, #fff4ec, #ffe8d8);
+  border: 2rpx solid #ffd2b3;
+}
+
+.ed-card.user {
+  background: #f6f8fa;
+  border: 2rpx solid #e6eaee;
+}
+
+.ed-emoji {
+  font-size: 60rpx;
+}
+
+.ed-name {
+  font-size: 31rpx;
+  font-weight: 800;
+  color: #2b3440;
+  margin-top: 12rpx;
+}
+
+.ed-desc {
+  font-size: 21rpx;
+  color: #8a94a3;
+  line-height: 1.7;
+  margin-top: 12rpx;
+  min-height: 108rpx;
+}
+
+.ed-btn {
+  margin-top: 18rpx;
+  width: 100%;
+  padding: 18rpx 0;
+  border-radius: 999rpx;
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, #FF9A5A, #E5541E);
+}
+
+.ed-btn.ghost {
+  color: #2b3440;
+  background: #fff;
+  border: 2rpx solid #dfe4e9;
+}
+
+/* ============ Hero 头部 ============ */
+.hero {
+  background: linear-gradient(150deg, #FF9A5A, #FF6B35 55%, #E5541E);
+  border-radius: 36rpx;
+  padding: 40rpx 34rpx 34rpx;
+  color: #fff;
+  box-shadow: 0 14rpx 32rpx rgba(255, 107, 53, 0.3);
+  margin-bottom: 28rpx;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 背景装饰圆 */
+.hero::before {
+  content: '';
+  position: absolute;
+  right: -70rpx;
+  top: -90rpx;
+  width: 260rpx;
+  height: 260rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  right: 60rpx;
+  top: 120rpx;
+  width: 90rpx;
+  height: 90rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.hero-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-greet {
+  display: block;
+  font-size: 26rpx;
+  opacity: 0.85;
+  margin-bottom: 8rpx;
+}
+
+.hero-title {
+  font-size: 42rpx;
+  font-weight: 800;
+  letter-spacing: 2rpx;
+}
+
+/* 吉祥物装饰（醒狮） */
+.hero-mascot {
+  width: 128rpx;
+  height: 128rpx;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.92);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 80%;
+  box-shadow: 0 6rpx 18rpx rgba(0, 0, 0, 0.12);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Ccircle cx='24' cy='24' r='19' fill='%23ff9600'/%3E%3Ccircle cx='24' cy='25' r='13.5' fill='%23ffd166'/%3E%3Ccircle cx='11' cy='13' r='4' fill='%23e6a800'/%3E%3Ccircle cx='37' cy='13' r='4' fill='%23e6a800'/%3E%3Ccircle cx='19' cy='23' r='2.2' fill='%233c3c3c'/%3E%3Ccircle cx='29' cy='23' r='2.2' fill='%233c3c3c'/%3E%3Cellipse cx='24' cy='28.5' rx='2.6' ry='1.8' fill='%23e05c3a'/%3E%3Cpath d='M20 32c1.4 1.6 6.6 1.6 8 0' fill='none' stroke='%233c3c3c' stroke-width='1.6' stroke-linecap='round'/%3E%3Ccircle cx='15.5' cy='28' r='2' fill='%23ffb3a0' opacity='.7'/%3E%3Ccircle cx='32.5' cy='28' r='2' fill='%23ffb3a0' opacity='.7'/%3E%3C/svg%3E");
+}
+
+.hero-stats {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 24rpx;
+  padding: 22rpx 0;
+  margin-bottom: 24rpx;
+  position: relative;
+  z-index: 1;
+}
+
+.hstat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4rpx;
+}
+
+.hstat-num {
+  font-size: 40rpx;
+  font-weight: 800;
+}
+
+.hstat-label {
+  font-size: 22rpx;
+  opacity: 0.85;
+}
+
+.hstat-divider {
+  width: 2rpx;
+  height: 52rpx;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* 继续挑战 CTA */
+.hero-cta {
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 20rpx 26rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 6rpx 16rpx rgba(0, 0, 0, 0.1);
+}
+
+.hero-cta:active {
+  transform: scale(0.98);
+}
+
+.hero-cta-label {
+  display: block;
+  font-size: 22rpx;
+  color: #8a94a0;
+  margin-bottom: 4rpx;
+}
+
+.hero-cta-level {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #3c3c3c;
+}
+
+.hero-cta-go {
+  background: linear-gradient(135deg, #ffc800, #ff9600);
+  color: #fff;
+  font-size: 28rpx;
+  font-weight: 800;
+  letter-spacing: 2rpx;
+  border-radius: 50%;
+  width: 88rpx;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6rpx 0 #e6a800;
+}
+
+/* ============ 错题本入口 ============ */
+.wrongbook-entry {
+  background: #fff;
+  border: 3rpx solid #eef1f4;
+  border-radius: 26rpx;
+  padding: 24rpx 28rpx;
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  margin-bottom: 40rpx;
+  box-shadow: 0 4rpx 14rpx rgba(0, 0, 0, 0.04);
+}
+
+.wrongbook-entry:active {
+  transform: translateY(2rpx);
+}
+
+.wrongbook-ic-wrap {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 22rpx;
+  background: #FFF0E6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.wrongbook-icon {
+  width: 44rpx;
+  height: 44rpx;
+}
+
+.wrongbook-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+.wrongbook-label {
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.wrongbook-sub {
+  font-size: 22rpx;
+  color: #ff9600;
+}
+
+.wrongbook-arrow {
+  font-size: 44rpx;
+  color: #d5dae0;
+}
+
+/* ============ 闯关地图 ============ */
+.list-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 22rpx;
+  padding: 0 6rpx;
+}
+
+.list-title {
+  font-size: 34rpx;
+  font-weight: 800;
+}
+
+.list-sub {
+  font-size: 24rpx;
+  color: #8a94a0;
+}
+
+.level-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.level-card {
+  background: #fff;
+  border: 3rpx solid #eef1f4;
+  border-radius: 28rpx;
+  padding: 30rpx 28rpx;
+  display: flex;
+  align-items: flex-start;
+  gap: 24rpx;
+  margin-bottom: 26rpx;
+  box-shadow: 0 4rpx 14rpx rgba(0, 0, 0, 0.04);
+  position: relative;
+}
+
+.level-card:active {
+  transform: translateY(2rpx);
+}
+
+.level-card.locked {
+  opacity: 0.55;
+}
+
+.level-card.passed {
+  border-color: #ffe9a8;
+  background: linear-gradient(180deg, #fffdf4, #fff);
+}
+
+.level-card.current {
+  border-color: #FF6B35;
+  border-width: 4rpx;
+  box-shadow: 0 10rpx 26rpx rgba(255, 107, 53, 0.18);
+}
+
+/* 时间线徽章 */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.level-badge {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 50%;
+  background: #FFF0E6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 38rpx;
+  font-weight: 800;
+  color: #FF6B35;
+}
+
+.level-card.passed .level-badge {
+  background: #fff6d8;
+}
+
+.level-card.locked .level-badge {
+  background: #f0f2f5;
+}
+
+.timeline-line {
+  width: 5rpx;
+  border-radius: 3rpx;
+  background: #e5e8ec;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 96rpx;
+  bottom: -56rpx;
+}
+
+.badge-ic {
+  width: 44rpx;
+  height: 44rpx;
+}
+
+.level-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+  padding-top: 4rpx;
+}
+
+.level-name-row {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.level-name {
+  font-size: 32rpx;
+  font-weight: 700;
+}
+
+.current-tag {
+  background: #FFF0E6;
+  color: #E5541E;
+  font-size: 20rpx;
+  font-weight: 700;
+  border-radius: 999rpx;
+  padding: 4rpx 14rpx;
+}
+
+.level-desc {
+  font-size: 24rpx;
+  color: #8a94a0;
+  line-height: 1.5;
+}
+
+.level-best {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  font-size: 22rpx;
+  color: #d8a700;
+  margin-top: 4rpx;
+}
+
+.best-ic {
+  width: 26rpx;
+  height: 26rpx;
+}
+
+.level-action {
+  align-self: center;
+  flex-shrink: 0;
+}
+
+.go-btn {
+  background: linear-gradient(135deg, #FF9A5A, #FF6B35);
+  color: #fff;
+  font-size: 24rpx;
+  font-weight: 800;
+  border-radius: 999rpx;
+  padding: 12rpx 30rpx;
+  box-shadow: 0 5rpx 0 #E5541E;
+}
+
+.go-btn.again {
+  background: #fff;
+  color: #d8a700;
+  border: 3rpx solid #ffe9a8;
+  box-shadow: 0 5rpx 0 #ffe9a8;
+}
+
+.list-foot {
+  text-align: center;
+  font-size: 22rpx;
+  color: #c2c9d1;
+  padding: 20rpx 0 10rpx;
+}

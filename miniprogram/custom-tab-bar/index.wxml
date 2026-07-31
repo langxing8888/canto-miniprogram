@@ -1,0 +1,38 @@
+<view class="tabbar" hidden="{{hide}}">
+  <!-- 左侧两个 -->
+  <view
+    wx:for="{{list}}"
+    wx:key="pagePath"
+    wx:if="{{index < 2}}"
+    class="tab-item {{selected === index ? 'active' : ''}}"
+    data-index="{{index}}"
+    data-path="{{item.pagePath}}"
+    bindtap="switchTab"
+  >
+    <view class="tab-ic tab-ic-{{item.icon}} {{selected === index ? 'on' : ''}}" />
+    <text class="tab-text">{{item.text}}</text>
+  </view>
+
+  <!-- 中间占位（给凸起 CTA 让出正中位置） -->
+  <view class="tab-gap"></view>
+
+  <!-- 右侧两个 -->
+  <view
+    wx:for="{{list}}"
+    wx:key="pagePath"
+    wx:if="{{index >= 2}}"
+    class="tab-item {{selected === index ? 'active' : ''}}"
+    data-index="{{index}}"
+    data-path="{{item.pagePath}}"
+    bindtap="switchTab"
+  >
+    <view class="tab-ic tab-ic-{{item.icon}} {{selected === index ? 'on' : ''}}" />
+    <text class="tab-text">{{item.text}}</text>
+  </view>
+
+  <!-- 中间凸起 CTA：约课（直达课程管理页） -->
+  <view class="cta-wrap" bindtap="goCourse">
+    <view class="cta-btn"><view class="cta-ic" /></view>
+    <text class="cta-text">约课</text>
+  </view>
+</view>

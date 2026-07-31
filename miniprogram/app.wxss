@@ -1,0 +1,117 @@
+/* 全局样式：简洁清爽风格 */
+page {
+  background: #f7f8fa;
+  font-size: 30rpx;
+  color: #3c3c3c;
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #FF9A5A, #FF6B35);
+  color: #fff;
+  border-radius: 32rpx;
+  font-size: 34rpx;
+  font-weight: 600;
+  letter-spacing: 2rpx;
+  padding: 24rpx 0;
+  text-align: center;
+  box-shadow: 0 6rpx 0 #E5541E, 0 10rpx 24rpx rgba(255, 107, 53, 0.25);
+}
+
+.btn-primary.disabled {
+  background: #e5e5e5;
+  color: #afafaf;
+  box-shadow: 0 6rpx 0 #d0d0d0;
+}
+
+.btn-plain {
+  background: #fff;
+  color: #FF6B35;
+  border: 3rpx solid #e5e5e5;
+  border-radius: 32rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  padding: 22rpx 0;
+  text-align: center;
+}
+
+/* ============ 矢量图标库（内联 SVG，统一线性风格） ============ */
+.icon {
+  display: inline-block;
+  width: 40rpx;
+  height: 40rpx;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  vertical-align: middle;
+}
+
+/* 锁（灰，渐变） */
+.icon-lock {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23c3cbd4'/%3E%3Cstop offset='1' stop-color='%2394a0ac'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M8 10.5V8a4 4 0 0 1 8 0v2.5' fill='none' stroke='%23a7b1bc' stroke-width='2.6' stroke-linecap='round'/%3E%3Crect x='4.5' y='10' width='15' height='10.5' rx='3.2' fill='url(%23g)'/%3E%3Crect x='6' y='11.4' width='5' height='2.2' rx='1.1' fill='%23fff' opacity='.35'/%3E%3Ccircle cx='12' cy='14.6' r='1.7' fill='%23fff'/%3E%3Crect x='11.2' y='15.4' width='1.6' height='2.6' rx='.8' fill='%23fff'/%3E%3C/svg%3E");
+}
+
+/* 星（金，渐变高光） */
+.icon-star {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23ffe066'/%3E%3Cstop offset='1' stop-color='%23f5a623'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M12 2.2l2.9 6 6.6.9-4.8 4.5 1.2 6.5L12 17l-5.9 3.1 1.2-6.5-4.8-4.5 6.6-.9z' fill='url(%23g)' stroke='%23e0940f' stroke-width='.8' stroke-linejoin='round'/%3E%3Cpath d='M9.6 6.5L12 4.2l1.2 2.6' fill='none' stroke='%23fff' stroke-width='1.4' stroke-linecap='round' opacity='.65'/%3E%3C/svg%3E");
+}
+
+/* 时钟（蓝灰，渐变环） */
+.icon-clock {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23aab6c3'/%3E%3Cstop offset='1' stop-color='%23808d9b'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='12' cy='12' r='9.2' fill='url(%23g)'/%3E%3Ccircle cx='12' cy='12' r='6.8' fill='%23fff'/%3E%3Cpath d='M12 8.2V12l2.6 1.8' fill='none' stroke='%236b7684' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='12' cy='12' r='1' fill='%236b7684'/%3E%3C/svg%3E");
+}
+
+/* 书本（品牌橙，渐变封面） */
+.icon-book {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23FF9A5A'/%3E%3Cstop offset='1' stop-color='%23E5541E'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M5 5A3 3 0 0 1 8 2h11v16H8a3 3 0 0 0-3 3z' fill='url(%23g)'/%3E%3Cpath d='M5 20a3 3 0 0 0 3 2h11v-4' fill='none' stroke='%23c74615' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M9.5 7h6M9.5 10.5h4.5' stroke='%23fff' stroke-width='1.7' stroke-linecap='round' opacity='.9'/%3E%3Cpath d='M15.5 2v6l2-1.4L19 8V2z' fill='%23ffd9a8'/%3E%3C/svg%3E");
+}
+
+/* 麦克风（蓝，渐变） */
+.icon-mic {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%234cc3ff'/%3E%3Cstop offset='1' stop-color='%230e9df0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='8.6' y='2' width='6.8' height='11.6' rx='3.4' fill='url(%23g)'/%3E%3Cpath d='M10.4 4.6h1.6M10.4 7h1.6M10.4 9.4h1.6' stroke='%23fff' stroke-width='1.2' stroke-linecap='round' opacity='.6'/%3E%3Cpath d='M5.2 10.8a6.8 6.8 0 0 0 13.6 0' fill='none' stroke='%230e9df0' stroke-width='2.3' stroke-linecap='round'/%3E%3Cpath d='M12 17.6v2.9M8.4 21.6h7.2' stroke='%230e9df0' stroke-width='2.3' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+/* 喇叭（蓝，渐变） */
+.icon-speaker {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%234cc3ff'/%3E%3Cstop offset='1' stop-color='%230e9df0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M3.2 9.3v5.4a1.1 1.1 0 0 0 1.1 1.1h2.6l5 3.9a.65.65 0 0 0 1.05-.5V4.8a.65.65 0 0 0-1.05-.5l-5 3.9H4.3a1.1 1.1 0 0 0-1.1 1.1z' fill='url(%23g)'/%3E%3Cpath d='M15.6 8.8a4.4 4.4 0 0 1 0 6.4M18.3 6.2a8.3 8.3 0 0 1 0 11.6' fill='none' stroke='%230e9df0' stroke-width='2.1' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+/* 喇叭（白，用于彩底徽标） */
+.icon-speaker-white {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3.2 9.3v5.4a1.1 1.1 0 0 0 1.1 1.1h2.6l5 3.9a.65.65 0 0 0 1.05-.5V4.8a.65.65 0 0 0-1.05-.5l-5 3.9H4.3a1.1 1.1 0 0 0-1.1 1.1z' fill='%23ffffff'/%3E%3Cpath d='M15.6 8.8a4.4 4.4 0 0 1 0 6.4M18.3 6.2a8.3 8.3 0 0 1 0 11.6' fill='none' stroke='%23ffffff' stroke-width='2.1' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+/* 乌龟（绿，渐变壳） */
+.icon-turtle {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%237be03a'/%3E%3Cstop offset='1' stop-color='%2346a302'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M5 13.8a7 6 0 0 1 14 0z' fill='url(%23g)'/%3E%3Cpath d='M8 12.4c.9-1.9 2.3-2.8 4-2.8s3.1.9 4 2.8M12 9.6v4.2M9 11l1 2.8M15 11l-1 2.8' fill='none' stroke='%23fff' stroke-width='1' opacity='.5'/%3E%3Ccircle cx='20.3' cy='13' r='2.1' fill='%2358cc02'/%3E%3Ccircle cx='21' cy='12.4' r='.55' fill='%23fff'/%3E%3Crect x='6' y='13.8' width='2.6' height='3' rx='1.3' fill='%2346a302'/%3E%3Crect x='14.8' y='13.8' width='2.6' height='3' rx='1.3' fill='%2346a302'/%3E%3C/svg%3E");
+}
+
+/* 用户（蓝，渐变） */
+.icon-user {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%234cc3ff'/%3E%3Cstop offset='1' stop-color='%230e9df0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='12' cy='7.6' r='4.3' fill='url(%23g)'/%3E%3Cellipse cx='10.6' cy='6.2' rx='1.3' ry='.9' fill='%23fff' opacity='.4'/%3E%3Cpath d='M3.8 20.5c1.5-4 4.6-5.8 8.2-5.8s6.7 1.8 8.2 5.8a1 1 0 0 1-.95 1.3H4.75a1 1 0 0 1-.95-1.3z' fill='url(%23g)'/%3E%3C/svg%3E");
+}
+
+/* 扩音器（橙，渐变） */
+.icon-megaphone {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23ffb03a'/%3E%3Cstop offset='1' stop-color='%23ff7a00'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M3.8 10v4l3.2.6L18.6 19.2V4.8L7 9.4l-3.2.6z' fill='url(%23g)'/%3E%3Cpath d='M7 9.6v4.9' stroke='%23fff' stroke-width='1.2' opacity='.5'/%3E%3Cpath d='M6.4 15v3.4a1.6 1.6 0 0 0 3.2 0v-2.7' fill='none' stroke='%23ff7a00' stroke-width='2.1' stroke-linecap='round'/%3E%3Cpath d='M21.2 9.8v4.4M23 8v8' stroke='%23ffb03a' stroke-width='1.9' stroke-linecap='round' opacity='.85'/%3E%3C/svg%3E");
+}
+
+/* 奖杯（金，渐变高光） */
+.icon-trophy {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23ffe066'/%3E%3Cstop offset='1' stop-color='%23f0a51a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M7 2.5h10v6.3a5 5 0 0 1-10 0z' fill='url(%23g)'/%3E%3Cpath d='M7 4H4a3.4 3.4 0 0 0 3.6 4.6M17 4h3a3.4 3.4 0 0 1-3.6 4.6' fill='none' stroke='%23e0940f' stroke-width='2'/%3E%3Cpath d='M9 4.4c.5-.8 1.3-1.1 2-1.1' fill='none' stroke='%23fff' stroke-width='1.3' stroke-linecap='round' opacity='.7'/%3E%3Crect x='10.7' y='13.3' width='2.6' height='3.6' fill='%23d99511'/%3E%3Crect x='6.8' y='16.8' width='10.4' height='3.4' rx='1.4' fill='url(%23g)'/%3E%3Crect x='8.4' y='17.9' width='7.2' height='1.1' rx='.55' fill='%23e0940f' opacity='.5'/%3E%3C/svg%3E");
+}
+
+/* 火焰（橙红渐变，打卡） */
+.icon-flame {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23ff9a3d'/%3E%3Cstop offset='1' stop-color='%23f4511e'/%3E%3C/linearGradient%3E%3ClinearGradient id='h' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23ffe066'/%3E%3Cstop offset='1' stop-color='%23ffb020'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M12 1.6c1.3 4.5-5.6 6.8-5.6 12a5.6 5.6 0 0 0 11.2 0c0-2.3-1-4-2.2-5.6-.5 1.6-1.6 2.4-2.8 2.4 1.7-2.9 1.6-5.9-.6-8.8z' fill='url(%23g)'/%3E%3Cpath d='M12 22.2a3.4 3.4 0 0 1-3.4-3.4c0-2.1 2.2-3.2 3.4-5.4 1.2 2.2 3.4 3.3 3.4 5.4a3.4 3.4 0 0 1-3.4 3.4z' fill='url(%23h)'/%3E%3Cellipse cx='12' cy='19.4' rx='1.1' ry='1.5' fill='%23fff' opacity='.75'/%3E%3C/svg%3E");
+}
+
+/* 对勾（绿，渐变圆徽） */
+.icon-check {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%237be03a'/%3E%3Cstop offset='1' stop-color='%2346a302'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='12' cy='12' r='10' fill='url(%23g)'/%3E%3Cellipse cx='9' cy='6.5' rx='3' ry='1.6' fill='%23fff' opacity='.28'/%3E%3Cpath d='M7 12.4l3.3 3.3 6.7-7.2' fill='none' stroke='%23fff' stroke-width='2.7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+/* 加油（橙旗，渐变，未通关） */
+.icon-flag {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23FF9A5A'/%3E%3Cstop offset='1' stop-color='%23E5541E'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M6 21.5V3.5' stroke='%23b8460f' stroke-width='2.5' stroke-linecap='round'/%3E%3Ccircle cx='6' cy='3' r='1.4' fill='%23b8460f'/%3E%3Cpath d='M6 4.5c4-2.2 8 2.2 12 0v9c-4 2.2-8-2.2-12 0z' fill='url(%23g)'/%3E%3Cpath d='M7.5 5.6c1.2-.5 2.4-.6 3.6-.3' fill='none' stroke='%23fff' stroke-width='1.2' stroke-linecap='round' opacity='.55'/%3E%3C/svg%3E");
+}

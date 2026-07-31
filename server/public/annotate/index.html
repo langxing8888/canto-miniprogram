@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>教材批注 · 粤语学习后台</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #2b2f36; }
+
+  /* ===== 登录条 ===== */
+  .login-wrap { max-width: 360px; margin: 18vh auto 0; background: #fff; border-radius: 14px; padding: 28px; }
+  .login-wrap h2 { font-size: 18px; margin-bottom: 4px; }
+  .login-wrap p { font-size: 12px; color: #8a94a3; margin-bottom: 18px; }
+  .login-wrap input { width: 100%; padding: 10px 12px; border: 1px solid #dde1e6; border-radius: 8px; font-size: 14px; margin-bottom: 10px; }
+  .login-wrap button { width: 100%; padding: 11px; background: #FF6B35; color: #fff; border: 0; border-radius: 8px; font-size: 15px; cursor: pointer; }
+
+  /* ===== 文档选择 ===== */
+  .picker { max-width: 520px; margin: 10vh auto 0; background: #fff; border-radius: 14px; padding: 26px; }
+  .picker h2 { font-size: 17px; margin-bottom: 14px; }
+  .doc-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border: 1px solid #eceff2; border-radius: 10px; margin-bottom: 8px; cursor: pointer; }
+  .doc-item:hover { border-color: #FF6B35; background: #fff7f3; }
+  .doc-item .nm { font-size: 14px; font-weight: 600; }
+  .doc-item .pg { font-size: 12px; color: #8a94a3; }
+  .up-btn { display: block; width: 100%; padding: 12px; margin-top: 14px; background: #FF6B35; color: #fff; border: 0; border-radius: 10px; font-size: 14px; cursor: pointer; }
+  .up-tip { font-size: 12px; color: #8a94a3; margin-top: 8px; text-align: center; }
+
+  /* ===== 批注工作区 ===== */
+  .studio { display: none; height: 100%; flex-direction: column; }
+  .toolbar { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: #1f2329; flex-wrap: wrap; }
+  .toolbar .grp { display: flex; align-items: center; gap: 6px; }
+  .tool-btn { min-width: 40px; height: 40px; border-radius: 9px; border: 1px solid #3a4048; background: #2b2f36; color: #cfd6df; font-size: 13px; cursor: pointer; padding: 0 10px; touch-action: manipulation; }
+  .tool-btn.on { background: #FF6B35; border-color: #FF6B35; color: #fff; }
+  .color-dot { width: 26px; height: 26px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; }
+  .color-dot.on { border-color: #fff; }
+  .page-ind { color: #cfd6df; font-size: 13px; min-width: 64px; text-align: center; }
+  .sync-ind { font-size: 12px; color: #7ee787; margin-left: auto; }
+  .canvas-wrap { flex: 1; overflow: auto; -webkit-overflow-scrolling: touch; display: flex; justify-content: center; padding: 14px; }
+  .page-box { position: relative; height: fit-content; box-shadow: 0 6px 30px rgba(0,0,0,.45); }
+  .page-box img { display: block; max-width: 100%; user-select: none; -webkit-user-drag: none; }
+  #ink { position: absolute; left: 0; top: 0; touch-action: none; }
+  #live { position: absolute; left: 0; top: 0; touch-action: none; }
+  /* 就地文字输入浮层 */
+  #textInput { position: absolute; z-index: 20; background: #fff; border: 2px solid #FF6B35; border-radius: 8px; padding: 6px; box-shadow: 0 6px 24px rgba(0,0,0,.25); }
+  #textInput textarea { width: 200px; height: 44px; border: 0; outline: none; font-size: 15px; resize: none; font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; }
+  #textInput .ti-bar { display: flex; gap: 6px; margin-top: 4px; }
+  #textInput .ti-bar button { flex: 1; padding: 5px 0; border: 0; border-radius: 6px; font-size: 13px; cursor: pointer; }
+  #textInput .ti-ok { background: #FF6B35; color: #fff; }
+  #textInput .ti-cancel { background: #eceff2; color: #555; }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<!-- 登录 -->
+<div class="login-wrap" id="loginBox">
+  <h2>教材批注 · 登录</h2>
+  <p>使用后台账号登录（超级管理员 / 内容编辑 / 教务 / 授课老师）</p>
+  <input id="lu" placeholder="用户名" autocomplete="username">
+  <input id="lp" type="password" placeholder="密码" autocomplete="current-password">
+  <button onclick="doLogin()">登 录</button>
+</div>
+
+<!-- 文档选择 / 上传 -->
+<div class="picker hidden" id="pickerBox">
+  <h2>选择教材开始批注</h2>
+  <div id="docList"></div>
+  <input type="file" id="pdfFile" accept="application/pdf" hidden>
+  <button class="up-btn" onclick="document.getElementById('pdfFile').click()">＋ 上传新教材 PDF</button>
+  <div class="up-tip">上传后自动逐页转换，约几秒钟（Demo 限 7MB 内）</div>
+</div>
+
+<!-- 批注工作区 -->
+<div class="studio" id="studio">
+  <div class="toolbar">
+    <div class="grp">
+      <button class="tool-btn" onclick="turnPage(-1)">◀</button>
+      <span class="page-ind" id="pageInd">1 / 1</span>
+      <button class="tool-btn" onclick="turnPage(1)">▶</button>
+    </div>
+    <div class="grp" id="colorGrp"></div>
+    <div class="grp">
+      <button class="tool-btn" data-w="2" onclick="setWidth(this)">细</button>
+      <button class="tool-btn on" data-w="4" onclick="setWidth(this)">中</button>
+      <button class="tool-btn" data-w="8" onclick="setWidth(this)">粗</button>
+    </div>
+    <div class="grp">
+      <button class="tool-btn" id="textBtn" onclick="toggleText()">文字</button>
+      <button class="tool-btn" id="selBtn" onclick="toggleSelect()">选择</button>
+      <button class="tool-btn" id="eraserBtn" onclick="toggleEraser()">橡皮</button>
+      <button class="tool-btn" onclick="undo()">撤销</button>
+      <button class="tool-btn" onclick="clearPage()">清空本页</button>
+      <button class="tool-btn" onclick="exportPage()">导出本页</button>
+      <button class="tool-btn" id="resetAnnoBtn" onclick="resetStuAnno()" style="display:none">撤回全部</button>
+      <button class="tool-btn" id="penOnlyBtn" onclick="togglePenOnly()">仅触控笔:关</button>
+    </div>
+    <span class="sync-ind" id="syncInd">已同步</span>
+  </div>
+  <div class="canvas-wrap">
+    <div class="page-box">
+      <img id="pageImg" draggable="false">
+      <canvas id="ink"></canvas>
+      <canvas id="live"></canvas>
+      <div id="textInput" class="hidden">
+        <textarea id="textArea" placeholder="输入文字（可用粤拼/简拼），支持换行"></textarea>
+        <div class="ti-bar">
+          <button class="ti-cancel" onclick="cancelText()">取消</button>
+          <button class="ti-ok" onclick="confirmText()">确定</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================= 状态 ================= */
+const COLORS = ['#e5342e', '#1467ff', '#12a150', '#111111'];
+let token = localStorage.getItem('annoToken') || localStorage.getItem('teacherToken') || '';
+let matId = new URLSearchParams(location.search).get('id') || '';
+let stuUid = new URLSearchParams(location.search).get('stu') || '';   // 学生专属批注频道（教师端带入）
+let stuNo = new URLSearchParams(location.search).get('sno') || '';
+const stuQS = stuUid ? '&stu=' + encodeURIComponent(stuUid) : '';
+let mat = null;          // {id,name,pages,base}
+let page = 1;
+let color = COLORS[0];
+let lineW = 4;           // css px（基于 1000 宽标准页，会归一化）
+let eraser = false;
+let penOnly = false;
+let textMode = false;    // 文字模式：点击画布插入文字批注（供粤拼/简拼输入难写字）
+let strokes = [];        // 本页已确认指令 [{seq,type,page,s,target}]
+let mySeqs = [];         // 我发出的 stroke seq（撤销用）
+let lastSeq = 0;
+let drawing = null;      // 进行中的笔画 {pts:[[x,y]], c, w, mode}
+
+const $ = (s) => document.querySelector(s);
+
+/* ================= 登录 ================= */
+async function api(path, opts = {}) {
+  const r = await fetch(path, {
+    ...opts,
+    headers: { 'Content-Type': 'application/json', 'x-auth-token': token, ...(opts.headers || {}) },
+  });
+  const j = await r.json();
+  if (!j.ok) throw new Error(j.error || '请求失败');
+  return j;
+}
+
+async function doLogin() {
+  try {
+    const j = await api('/api/admin/login', {
+      method: 'POST',
+      body: JSON.stringify({ username: $('#lu').value.trim(), password: $('#lp').value }),
+    });
+    token = j.data.token;
+    localStorage.setItem('annoToken', token);
+    boot();
+  } catch (e) { alert(e.message); }
+}
+
+/* ================= 文档选择 ================= */
+async function showPicker() {
+  $('#loginBox').classList.add('hidden');
+  $('#pickerBox').classList.remove('hidden');
+  const j = await api('/api/admin/materials');
+  $('#docList').innerHTML = j.data.map((m) =>
+    `<div class="doc-item" onclick="location.search='?id=${m.id}'">
+       <span class="nm">${m.name}</span><span class="pg">${m.pages} 页</span>
+     </div>`).join('') || '<div class="up-tip">暂无教材，请先上传</div>';
+}
+
+document.getElementById('pdfFile').onchange = function () {
+  const f = this.files[0];
+  if (!f) return;
+  if (f.size > 7 * 1024 * 1024) return alert('Demo 限 7MB 内的 PDF');
+  const rd = new FileReader();
+  rd.onload = async () => {
+    try {
+      const j = await api('/api/admin/material/upload', {
+        method: 'POST',
+        body: JSON.stringify({ name: f.name.replace(/\.pdf$/i, ''), dataUrl: rd.result }),
+      });
+      location.search = '?id=' + j.data.id;
+    } catch (e) { alert(e.message); }
+  };
+  rd.readAsDataURL(f);
+};
+
+/* ================= 批注工作区 ================= */
+const img = $('#pageImg');
+const cv = $('#ink');          // 静态层：已确认笔画+文字，仅内容变化时重绘
+const ctx = cv.getContext('2d');
+const lcv = $('#live');        // 动态层：正在写的当前笔迹 / 选中框，高频刷新
+const lctx = lcv.getContext('2d');
+let selMode = false;           // 选择模式：可选中/拖动/缩放文字
+let selText = null;            // 当前选中的文字项（strokes 中的引用）
+let editing = null;            // 拖动/缩放中：{ mode:'move'|'resize', origSeq, t, offX, offY, baseFs, baseDist }
+
+async function openStudio() {
+  $('#loginBox').classList.add('hidden');
+  $('#pickerBox').classList.add('hidden');
+  const st = $('#studio');
+  st.style.display = 'flex';
+  const j = await api('/api/material?id=' + matId);
+  mat = j.data;
+  document.title = '批注 · ' + mat.name;
+  // 学生专属批注：标题栏提示当前批注对象（避免画错人）
+  if (stuUid) {
+    document.title = '批注给 学号' + stuNo + ' · ' + mat.name;
+    const si = $('#syncInd');
+    if (si) si.insertAdjacentHTML('beforebegin', `<span style="background:#fff0e6;color:#E5541E;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:700;margin-right:10px">✎ 正在给「学号 ${stuNo || stuUid.slice(0, 6)}」专属批注</span>`);
+    const rb = $('#resetAnnoBtn');
+    if (rb) rb.style.display = '';
+  }
+  // 颜色盘
+  $('#colorGrp').innerHTML = COLORS.map((c, i) =>
+    `<div class="color-dot ${i === 0 ? 'on' : ''}" style="background:${c}" onclick="setColor(this,'${c}')"></div>`).join('');
+  await fullLoad();
+  loadPage();
+  pollLoop(); // 长轮询：他端笔画秒级合入
+}
+
+function loadPage() {
+  $('#pageInd').textContent = page + ' / ' + mat.pages;
+  img.onload = () => {
+    const w = img.clientWidth, h = img.clientHeight;
+    [cv, lcv].forEach((c) => {
+      c.width = w * devicePixelRatio;
+      c.height = h * devicePixelRatio;
+      c.style.width = w + 'px';
+      c.style.height = h + 'px';
+    });
+    selText = null; editing = null;
+    redraw();
+    redrawLive();
+  };
+  img.src = mat.base + 'page-' + page + '.jpg';
+}
+
+function turnPage(d) {
+  const n = page + d;
+  if (n < 1 || n > mat.pages) return;
+  page = n;
+  loadPage();
+}
+
+/* ---------- 指令流 -> 画布重放 ---------- */
+function effectiveStrokes() {
+  // 计算本页最终可见项：clear 截断、undo 移除目标；stroke 和 text 均纳入
+  // 注意：忽略 target=0 的无效 undo（本地未同步项的 seq 暂为 0，不能被历史脏数据误杀）
+  const undone = new Set(strokes.filter((i) => i.type === 'undo' && i.target).map((i) => i.target));
+  let list = [];
+  strokes.forEach((i) => {
+    if (i.page !== page) return;
+    if (i.type === 'clear') list = [];
+    if ((i.type === 'stroke' || i.type === 'text') && !undone.has(i.seq)) list.push(i);
+  });
+  return list;
+}
+
+function drawText(context, t) {
+  const W = context.canvas.width, H = context.canvas.height;
+  context.save();
+  context.fillStyle = t.c || '#e5342e';
+  const fs = (t.size || 0.032) * W; // 字号相对页宽
+  context.font = '700 ' + fs + 'px -apple-system,"PingFang SC","Microsoft YaHei",sans-serif';
+  context.textBaseline = 'top';
+  // 支持多行（\n）
+  String(t.text || '').split('\n').forEach((line, i) => {
+    context.fillText(line, t.x * W, t.y * H + i * fs * 1.3);
+  });
+  context.restore();
+}
+
+/* 计算文字在归一化坐标下的包围盒 { x, y, w, h }（用于命中检测与选中框） */
+function textBox(t) {
+  const W = cv.width, H = cv.height;
+  const fs = (t.size || 0.032) * W;
+  ctx.save();
+  ctx.font = '700 ' + fs + 'px -apple-system,"PingFang SC","Microsoft YaHei",sans-serif';
+  const lines = String(t.text || '').split('\n');
+  let maxW = 0;
+  lines.forEach((ln) => { maxW = Math.max(maxW, ctx.measureText(ln).width); });
+  ctx.restore();
+  const hPx = lines.length * fs * 1.3;
+  return { x: t.x, y: t.y, w: maxW / W, h: hPx / H };
+}
+
+/* 静态层重绘：已确认笔画 + 文字（可跳过某个正在拖动的文字 seq） */
+function redraw(skipSeq) {
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  effectiveStrokes().forEach((i) => {
+    if (skipSeq && i.seq === skipSeq) return;
+    if (i.type === 'text') drawText(ctx, i.t);
+    else drawStroke(i.s);
+  });
+}
+
+/* 动态层重绘：正在写的当前笔迹 / 拖动中的文字 / 选中框 */
+function redrawLive() {
+  lctx.clearRect(0, 0, lcv.width, lcv.height);
+  if (drawing) drawStroke2(lctx, drawing);
+  // 拖动/缩放中的文字实时预览
+  if (editing) drawText(lctx, editing.t);
+  // 选中框 + 缩放手柄
+  const t = editing ? editing.t : (selText ? selText.t : null);
+  if (t) drawSelBox(t);
+}
+
+/* 画选中虚线框和右下角缩放手柄 */
+function drawSelBox(t) {
+  const W = lcv.width, H = lcv.height;
+  const b = textBox(t);
+  const pad = 6 * devicePixelRatio;
+  const x = b.x * W - pad, y = b.y * H - pad, w = b.w * W + pad * 2, h = b.h * H + pad * 2;
+  lctx.save();
+  lctx.strokeStyle = '#1467ff';
+  lctx.lineWidth = 1.5 * devicePixelRatio;
+  lctx.setLineDash([6 * devicePixelRatio, 4 * devicePixelRatio]);
+  lctx.strokeRect(x, y, w, h);
+  // 右下角缩放手柄（实心方块）
+  lctx.setLineDash([]);
+  lctx.fillStyle = '#1467ff';
+  const hs = 9 * devicePixelRatio;
+  lctx.fillRect(x + w - hs, y + h - hs, hs * 2, hs * 2);
+  lctx.restore();
+}
+
+function drawStroke(s) { drawStroke2(ctx, s); }
+
+/* 在指定 context 上画一条笔迹（静态层用 ctx，动态层用 lctx）
+   用二次贝塞尔曲线平滑：以相邻两点中点为曲线端点、原始点为控制点，笔迹圆润接近原生手写 */
+function drawStroke2(context, s) {
+  const W = context.canvas.width, H = context.canvas.height;
+  const pts = s.pts;
+  context.save();
+  context.lineCap = 'round';
+  context.lineJoin = 'round';
+  context.globalCompositeOperation = s.mode === 'erase' ? 'destination-out' : 'source-over';
+  context.strokeStyle = s.c;
+  context.lineWidth = s.w * W; // w 是相对页宽比例
+  context.beginPath();
+  if (pts.length < 3) {
+    // 点太少，直接连线
+    pts.forEach((pt, i) => {
+      const x = pt[0] * W, y = pt[1] * H;
+      i === 0 ? context.moveTo(x, y) : context.lineTo(x, y);
+    });
+  } else {
+    context.moveTo(pts[0][0] * W, pts[0][1] * H);
+    // 中段用二次贝塞尔：控制点=当前点，终点=当前点与下一点的中点
+    for (let i = 1; i < pts.length - 1; i++) {
+      const cx = pts[i][0] * W, cy = pts[i][1] * H;
+      const mx = (pts[i][0] + pts[i + 1][0]) / 2 * W;
+      const my = (pts[i][1] + pts[i + 1][1]) / 2 * H;
+      context.quadraticCurveTo(cx, cy, mx, my);
+    }
+    // 最后一段连到终点
+    const last = pts[pts.length - 1];
+    context.quadraticCurveTo(pts[pts.length - 2][0] * W, pts[pts.length - 2][1] * H, last[0] * W, last[1] * H);
+  }
+  context.stroke();
+  context.restore();
+}
+
+/* ---------- 拉取 ---------- */
+async function fullLoad() {
+  const j = await api('/api/material/strokes?id=' + matId + stuQS + '&since=0');
+  strokes = j.data.items;
+  lastSeq = j.data.seq;
+}
+
+async function pollLoop() {
+  while (true) {
+    try {
+      const j = await api('/api/material/strokes?id=' + matId + stuQS + '&since=' + lastSeq + '&wait=1');
+      if (j.data.items.length) {
+        // 跳过自己已本地上屏的笔画（按 seq 去重）
+        const known = new Set(strokes.map((i) => i.seq));
+        const fresh = j.data.items.filter((i) => !known.has(i.seq));
+        if (fresh.length) {
+          strokes = strokes.concat(fresh);
+          // 正在书写/拖动/缩放时不重绘静态层，避免与动态层预览打架造成闪烁；操作结束后自然会重绘
+          if (!drawing && !editing) { redraw(); redrawLive(); }
+        }
+        lastSeq = j.data.seq;
+      } else if (j.data.seq > lastSeq) {
+        lastSeq = j.data.seq;
+      }
+      $('#syncInd').textContent = '已同步 seq=' + lastSeq;
+      await new Promise((r) => setTimeout(r, 100));
+    } catch (e) {
+      $('#syncInd').textContent = '同步中断，重连中…';
+      await new Promise((r) => setTimeout(r, 2500));
+    }
+  }
+}
+
+/* ---------- 提交 ---------- */
+let pendingOps = []; // 掉线/掉登录期间暂存，恢复后补传
+
+async function flushPending() {
+  while (pendingOps.length) {
+    const op = pendingOps[0];
+    const seq = await sendOp(op, true);
+    if (!seq) break; // 仍失败，留待下次
+    pendingOps.shift();
+  }
+}
+
+async function sendOp(payload, isRetry) {
+  $('#syncInd').textContent = '上传中…';
+  try {
+    const r = await fetch('/api/admin/material/op', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+      body: JSON.stringify({ id: matId, page, stu: stuUid, ...payload }),
+    });
+    const j = await r.json();
+    if (j.ok) {
+      lastSeq = j.seq;
+      $('#syncInd').textContent = '已同步 seq=' + lastSeq;
+      return j.seq;
+    }
+    // 登录态失效：暂存笔画 + 弹出重登（重登成功后自动补传，笔迹不丢）
+    if (r.status === 401) {
+      if (!isRetry) pendingOps.push(payload);
+      $('#syncInd').textContent = '登录已失效，请重新登录（笔迹已暂存）';
+      showRelogin();
+      return 0;
+    }
+    throw new Error(j.error);
+  } catch (e) {
+    if (!isRetry) pendingOps.push(payload);
+    $('#syncInd').textContent = '上传失败（已暂存 ' + pendingOps.length + ' 笔）：' + e.message;
+    return 0;
+  }
+}
+
+/* 会话失效时的轻量重登浮层（不离开画布，笔迹全保留） */
+function showRelogin() {
+  if (document.getElementById('reloginBox')) return;
+  const div = document.createElement('div');
+  div.id = 'reloginBox';
+  div.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:99';
+  div.innerHTML = `<div style="background:#fff;border-radius:14px;padding:24px;width:320px">
+    <h3 style="font-size:16px;margin-bottom:6px">登录已过期</h3>
+    <p style="font-size:12px;color:#8a94a3;margin-bottom:14px">重新登录后未同步的笔迹会自动补传</p>
+    <input id="rlu" placeholder="用户名" style="width:100%;padding:9px 12px;border:1px solid #dde1e6;border-radius:8px;margin-bottom:8px">
+    <input id="rlp" type="password" placeholder="密码" style="width:100%;padding:9px 12px;border:1px solid #dde1e6;border-radius:8px;margin-bottom:12px">
+    <button id="rlbtn" style="width:100%;padding:10px;background:#FF6B35;color:#fff;border:0;border-radius:8px;cursor:pointer">重新登录</button>
+  </div>`;
+  document.body.appendChild(div);
+  document.getElementById('rlbtn').onclick = async () => {
+    try {
+      const r = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: document.getElementById('rlu').value.trim(), password: document.getElementById('rlp').value }),
+      }).then((x) => x.json());
+      if (!r.ok) return alert(r.error || '登录失败');
+      token = r.data.token;
+      localStorage.setItem('annoToken', token);
+      div.remove();
+      await flushPending();
+    } catch (e) { alert(e.message); }
+  };
+}
+
+/* ---------- 书写 / 选择（Pointer Events：鼠标/手指/各品牌触控笔通吃，事件绑在顶层动态画布） ---------- */
+lcv.addEventListener('pointerdown', (e) => {
+  if (penOnly && e.pointerType === 'touch') return; // 仅笔模式：手指用于滚动
+  e.preventDefault();
+  const r = lcv.getBoundingClientRect();
+  const nx = (e.clientX - r.left) / r.width;
+  const ny = (e.clientY - r.top) / r.height;
+
+  // 选择模式：命中缩放手柄 -> 缩放；命中文字 -> 移动；空白 -> 取消选择
+  if (selMode) {
+    try { lcv.setPointerCapture(e.pointerId); } catch (_) {}
+    if (selText && hitHandle(selText.t, nx, ny)) {
+      const b = textBox(selText.t);
+      editing = { mode: 'resize', origSeq: selText.seq, t: { ...selText.t },
+        baseFs: selText.t.size || 0.032, baseDist: Math.hypot((nx - b.x), (ny - b.y)) || 0.001 };
+      redraw(selText.seq); redrawLive();
+      return;
+    }
+    const hit = hitText(nx, ny);
+    if (hit) {
+      selText = hit;
+      editing = { mode: 'move', origSeq: hit.seq, t: { ...hit.t }, offX: nx - hit.t.x, offY: ny - hit.t.y };
+      redraw(hit.seq); redrawLive();
+    } else {
+      selText = null; redrawLive();
+    }
+    return;
+  }
+
+  // 文字模式：点击位置插入文字批注（不画线）
+  if (textMode) { addTextAt(nx, ny); return; }
+
+  // 画笔/橡皮
+  try { lcv.setPointerCapture(e.pointerId); } catch (_) { /* 合成事件/已释放指针无需捕获 */ }
+  drawing = {
+    c: eraser ? '#000' : color,
+    w: (eraser ? lineW * 3 : lineW) / 1000, // 归一化到页宽
+    mode: eraser ? 'erase' : 'pen',
+    pts: [[nx, ny]],
+  };
+  // 实时同步：起始段，标记 start（学生端立即开一条新的 live 笔画）
+  liveSentLen = 1;
+  liveFlush(true);
+});
+
+/* ---- 实时笔画上报（书写中把新增点节流推给学生端，不落盘） ---- */
+let liveSentLen = 0;   // 已上报到的点索引
+let liveTimer = null;  // 节流定时器
+function liveFlush(start) {
+  if (!drawing) return;
+  const seg = drawing.pts.slice(liveSentLen);
+  if (!start && !seg.length) return;
+  liveSentLen = drawing.pts.length;
+  // 火速发送，不等返回（失败忽略，正式笔画松手后会补齐）
+  fetch('/api/admin/material/op', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+    body: JSON.stringify({ id: matId, stu: stuUid || '', type: 'live', page, start: !!start, seg, c: drawing.c, w: drawing.w, mode: drawing.mode }),
+  }).catch(() => {});
+}
+
+lcv.addEventListener('pointermove', (e) => {
+  const r = lcv.getBoundingClientRect();
+  const nx = (e.clientX - r.left) / r.width;
+  const ny = (e.clientY - r.top) / r.height;
+
+  // 拖动/缩放文字：只刷新动态层，静态层跳过该文字（不闪）
+  if (editing) {
+    e.preventDefault();
+    if (editing.mode === 'move') {
+      editing.t.x = Math.max(0, Math.min(1, nx - editing.offX));
+      editing.t.y = Math.max(0, Math.min(1, ny - editing.offY));
+    } else {
+      const b = textBox(editing.t);
+      const dist = Math.hypot((nx - b.x), (ny - b.y)) || 0.001;
+      const ns = editing.baseFs * (dist / editing.baseDist);
+      editing.t.size = Math.max(0.012, Math.min(0.15, ns)); // 限幅，避免过大过小
+    }
+    redrawLive();
+    return;
+  }
+
+  if (!drawing) return;
+  if (penOnly && e.pointerType === 'touch') return;
+  e.preventDefault();
+  // getCoalescedEvents 拿更高采样率（触控笔更顺滑）；部分实现返回空数组时兜底用事件本身
+  let evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [];
+  if (!evs.length) evs = [e];
+  // 直接使用原始采样点（tldraw 同款思路）：所见即所得，圆润交给贝塞尔中点渲染，不做输入滤波避免笔迹偏移
+  evs.forEach((ev) => {
+    drawing.pts.push([(ev.clientX - r.left) / r.width, (ev.clientY - r.top) / r.height]);
+  });
+  redrawLive(); // 关键：书写时只刷新动态层，静态层的文字/笔画不动，杜绝闪烁
+  // 实时上报新增点（节流 ~70ms 一次，兼顾实时性与请求量）
+  if (!liveTimer) {
+    liveTimer = setTimeout(() => { liveTimer = null; liveFlush(false); }, 70);
+  }
+});
+
+async function finishStroke() {
+  // 结束文字拖动/缩放：提交变更（撤销旧文字 + 新增新位置文字）
+  if (editing) {
+    const ed = editing; editing = null;
+    await commitTextChange(ed.origSeq, ed.t);
+    return;
+  }
+  if (!drawing) return;
+  const s = drawing;
+  drawing = null;
+  if (liveTimer) { clearTimeout(liveTimer); liveTimer = null; }
+  liveSentLen = 0;
+  if (s.pts.length < 2) { redraw(); redrawLive(); return; }
+  // 仅去掉完全重叠的点（亚像素级，不改变形状）：保证"保存的点=书写时画的点"，
+  // 静态层重绘与动态层最后一帧几何一致，松手零跳变、零偏移（所见即所得）
+  const pts = s.pts.filter((p, i) => i === 0 || i === s.pts.length - 1 ||
+    Math.hypot(p[0] - s.pts[i - 1][0], p[1] - s.pts[i - 1][1]) > 0.0002);
+  const item = { seq: 0, type: 'stroke', page, s: { ...s, pts } };
+  strokes.push(item);
+  drawStroke(item.s); // 增量：只把这一笔画到静态层（不全量重绘，笔画多也零卡顿）
+  redrawLive();       // 清掉动态层的临时笔迹（几何与静态层完全一致，肉眼零跳变）
+  const seq = await sendOp({ type: 'stroke', s: item.s });
+  item.seq = seq;
+  if (seq) mySeqs.push(seq);
+}
+lcv.addEventListener('pointerup', finishStroke);
+lcv.addEventListener('pointercancel', finishStroke);
+
+/* 命中检测：返回本页最上层被点中的文字项（从后往前找） */
+function hitText(nx, ny) {
+  const list = effectiveStrokes().filter((i) => i.type === 'text');
+  for (let k = list.length - 1; k >= 0; k--) {
+    const b = textBox(list[k].t);
+    if (nx >= b.x - 0.01 && nx <= b.x + b.w + 0.01 && ny >= b.y - 0.01 && ny <= b.y + b.h + 0.01) return list[k];
+  }
+  return null;
+}
+
+/* 是否点中右下角缩放手柄 */
+function hitHandle(t, nx, ny) {
+  const b = textBox(t);
+  const hx = b.x + b.w, hy = b.y + b.h;
+  const tol = 0.03; // 手柄命中容差
+  return Math.abs(nx - hx) < tol && Math.abs(ny - hy) < tol;
+}
+
+/* 提交文字移动/缩放：撤销旧文字，按新位置/字号新增（复用 undo+text，无需改后端） */
+async function commitTextChange(oldSeq, newT) {
+  // 本地先同步"删旧 + 加新"并立即渲染，消除网络往返造成的空窗闪烁
+  strokes.push({ seq: 0, type: 'undo', page, target: oldSeq });
+  mySeqs = mySeqs.filter((s) => s !== oldSeq);
+  const item = { seq: 0, type: 'text', page, t: newT };
+  strokes.push(item);
+  selText = item;
+  redraw(); redrawLive(); // 新文字已在数组中，立即上屏，无消失空窗
+  // 再把变更异步同步到服务器（此时本地已渲染完成，网络延迟不影响显示）
+  await sendOp({ type: 'undo', target: oldSeq });
+  const seq = await sendOp({ type: 'text', t: newT });
+  item.seq = seq;
+  if (seq) mySeqs.push(seq);
+}
+
+/* ---------- 工具 ---------- */
+function setColor(el, c) {
+  color = c;
+  eraser = false;
+  $('#eraserBtn').classList.remove('on');
+  document.querySelectorAll('.color-dot').forEach((d) => d.classList.remove('on'));
+  el.classList.add('on');
+}
+function setWidth(el) {
+  lineW = +el.dataset.w;
+  document.querySelectorAll('[data-w]').forEach((b) => b.classList.remove('on'));
+  el.classList.add('on');
+}
+function toggleEraser() {
+  eraser = !eraser;
+  $('#eraserBtn').classList.toggle('on', eraser);
+  if (eraser) { textMode = false; $('#textBtn').classList.remove('on'); exitSelect(); }
+}
+
+/* 文字模式：开启后点击画布位置弹输入框（用系统粤拼/简拼输入法打难写字） */
+function toggleText() {
+  textMode = !textMode;
+  $('#textBtn').classList.toggle('on', textMode);
+  if (textMode) { eraser = false; $('#eraserBtn').classList.remove('on'); exitSelect(); }
+  lcv.style.cursor = textMode ? 'text' : '';
+}
+
+/* 选择模式：开启后可点选文字并拖动/缩放（右下角手柄） */
+function toggleSelect() {
+  selMode = !selMode;
+  $('#selBtn').classList.toggle('on', selMode);
+  if (selMode) {
+    eraser = false; textMode = false;
+    $('#eraserBtn').classList.remove('on'); $('#textBtn').classList.remove('on');
+    lcv.style.cursor = 'move';
+  } else {
+    selText = null; lcv.style.cursor = '';
+  }
+  redrawLive();
+}
+
+/* 退出选择模式并清除选中态 */
+function exitSelect() {
+  if (!selMode && !selText) return;
+  selMode = false; selText = null;
+  $('#selBtn').classList.remove('on');
+  lcv.style.cursor = '';
+  redrawLive();
+}
+
+/* 文字输入：点击画布位置弹出就地输入浮层（替代 prompt，避免触控笔松手时序导致的消失问题） */
+let pendingTextPos = null; // 待插入文字的归一化坐标 {x,y}
+function addTextAt(nx, ny) {
+  pendingTextPos = { x: nx, y: ny };
+  const box = $('#textInput');
+  const ta = $('#textArea');
+  // 定位到点击处（相对 page-box 的像素坐标）
+  box.style.left = (nx * lcv.clientWidth) + 'px';
+  box.style.top = (ny * lcv.clientHeight) + 'px';
+  box.classList.remove('hidden');
+  ta.value = '';
+  setTimeout(() => ta.focus(), 30);
+}
+
+async function confirmText() {
+  const ta = $('#textArea');
+  const val = (ta.value || '').trim();
+  $('#textInput').classList.add('hidden');
+  if (!val || !pendingTextPos) { pendingTextPos = null; return; }
+  const t = { x: pendingTextPos.x, y: pendingTextPos.y, text: val, c: color, size: lineW >= 8 ? 0.045 : (lineW <= 2 ? 0.026 : 0.034) };
+  pendingTextPos = null;
+  const item = { seq: 0, type: 'text', page, t };
+  strokes.push(item);
+  redraw(); redrawLive();
+  const seq = await sendOp({ type: 'text', t });
+  item.seq = seq;
+  if (seq) {
+    mySeqs.push(seq); // 文字也可撤销
+    strokes = strokes.filter((s) => s === item || s.seq !== seq || s.type !== 'text'); // 去掉长轮询回显的同 seq 副本
+    redraw(); redrawLive();
+  }
+}
+function cancelText() { $('#textInput').classList.add('hidden'); pendingTextPos = null; }
+function togglePenOnly() {
+  penOnly = !penOnly;
+  $('#penOnlyBtn').textContent = '仅触控笔:' + (penOnly ? '开' : '关');
+  $('#penOnlyBtn').classList.toggle('on', penOnly);
+}
+async function undo() {
+  if (!mySeqs.length) return;
+  const target = mySeqs.pop();
+  if (selText && selText.seq === target) selText = null;
+  strokes.push({ seq: 0, type: 'undo', page, target });
+  redraw(); redrawLive();
+  await sendOp({ type: 'undo', target });
+}
+async function clearPage() {
+  if (!confirm('清空本页全部批注？')) return;
+  selText = null;
+  strokes.push({ seq: 0, type: 'clear', page });
+  redraw(); redrawLive();
+  await sendOp({ type: 'clear' });
+}
+
+/* 撤回该学生这本教材的全部批注（所有页），学生端即刻消失 */
+async function resetStuAnno() {
+  if (!stuUid) return;
+  if (!confirm(`确定撤回「学号 ${stuNo}」这本教材的全部批注吗？\n该操作会清空所有页，学生端立即消失，且会记入后台日志。`)) return;
+  try {
+    await api('/api/admin/material/anno-reset', { method: 'POST', body: JSON.stringify({ id: matId, stu: stuUid }) });
+    strokes = [];
+    lastSeq = 0;
+    await fullLoad();
+    redraw();
+    alert('已撤回该学生全部批注');
+  } catch (e) { alert(e.message); }
+}
+
+/** 导出本页：底图 + 批注层合成 jpeg 下载（免去截图/转发的手工流程） */
+async function exportPage() {
+  const im = new Image();
+  im.src = mat.base + 'page-' + page + '.jpg';
+  await new Promise((ok, bad) => { im.onload = ok; im.onerror = bad; });
+  const out = document.createElement('canvas');
+  out.width = im.naturalWidth;
+  out.height = im.naturalHeight;
+  const octx = out.getContext('2d');
+  octx.drawImage(im, 0, 0);
+  // 用与屏显一致的重放逻辑绘制批注层
+  const undone = new Set(strokes.filter((i) => i.type === 'undo').map((i) => i.target));
+  let list = [];
+  strokes.forEach((i) => {
+    if (i.page !== page) return;
+    if (i.type === 'clear') list = [];
+    if ((i.type === 'stroke' || i.type === 'text') && !undone.has(i.seq)) list.push(i);
+  });
+  list.forEach((it) => {
+    if (it.type === 'text') {
+      const t = it.t;
+      octx.save();
+      octx.fillStyle = t.c || '#e5342e';
+      const fs = (t.size || 0.032) * out.width;
+      octx.font = '700 ' + fs + 'px -apple-system,"PingFang SC","Microsoft YaHei",sans-serif';
+      octx.textBaseline = 'top';
+      String(t.text || '').split('\n').forEach((line, i) => octx.fillText(line, t.x * out.width, t.y * out.height + i * fs * 1.3));
+      octx.restore();
+      return;
+    }
+    const s = it.s;
+    octx.save();
+    octx.lineCap = 'round';
+    octx.lineJoin = 'round';
+    octx.globalCompositeOperation = s.mode === 'erase' ? 'destination-out' : 'source-over';
+    octx.strokeStyle = s.c;
+    octx.lineWidth = s.w * out.width;
+    octx.beginPath();
+    s.pts.forEach((pt, i) => (i === 0 ? octx.moveTo(pt[0] * out.width, pt[1] * out.height) : octx.lineTo(pt[0] * out.width, pt[1] * out.height)));
+    octx.stroke();
+    octx.restore();
+  });
+  const a = document.createElement('a');
+  a.download = `${mat.name}-第${page}页-批注.jpg`;
+  a.href = out.toDataURL('image/jpeg', 0.88);
+  a.click();
+}
+
+/* ================= 启动 ================= */
+function showLoginBox() {
+  $('#loginBox').classList.remove('hidden');
+  $('#pickerBox').classList.add('hidden');
+  $('#studio').style.display = 'none';
+}
+
+async function boot() {
+  // 无 token（未登录 / 从教师工作台跳来但会话已失效）：直接显示登录框
+  if (!token) return showLoginBox();
+  try {
+    matId ? await openStudio() : await showPicker();
+  } catch (e) {
+    // token 失效（服务器重启会话清空等）：清掉旧 token，弹登录框重新登录
+    if (/unauthorized|登录|401/.test(e.message)) {
+      localStorage.removeItem('annoToken');
+      localStorage.removeItem('teacherToken');
+      token = '';
+      showLoginBox();
+    } else alert(e.message);
+  }
+}
+boot();
+window.addEventListener('resize', () => mat && loadPage());
+</script>
+</body>
+</html>

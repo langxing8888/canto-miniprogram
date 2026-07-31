@@ -1,0 +1,60 @@
+<view class="wrap">
+  <!-- 日历头：年月 + 翻月（月视图时）+ 展开/收起 -->
+  <view class="cal-head">
+    <view class="cal-title">{{title}}</view>
+    <view class="cal-nav" wx:if="{{expanded}}">
+      <text class="nav-btn" bind:tap="prevMonth">‹</text>
+      <text class="nav-btn" bind:tap="nextMonth">›</text>
+    </view>
+  </view>
+
+  <!-- 星期表头 -->
+  <view class="cal-weekhead">
+    <text wx:for="{{weekHead}}" wx:key="*this" class="wh {{index >= 5 ? 'weekend' : ''}}">{{item}}</text>
+  </view>
+
+  <!-- 日期网格 -->
+  <view class="cal-grid">
+    <view
+      wx:for="{{cells}}"
+      wx:key="date"
+      class="cal-cell {{item.sel ? 'sel' : ''}} {{item.out ? 'out' : ''}} {{item.disabled ? 'disabled' : ''}}"
+      data-date="{{item.date}}"
+      data-disabled="{{item.disabled}}"
+      bind:tap="onPickDate"
+    >
+      <text class="cc-day {{item.today ? 'today' : ''}}">{{item.today ? '今' : item.day}}</text>
+      <text class="cc-dot {{item.mine ? 'mine' : ''}} {{item.today ? 'in-circle' : ''}}" wx:if="{{item.dot || item.mine}}"></text>
+    </view>
+  </view>
+
+  <!-- 展开/收起 -->
+  <view class="cal-toggle" bind:tap="toggleExpand">
+    <text class="tg-txt">{{expanded ? '收起' : '展开整月'}}</text>
+    <text class="tg-chev {{expanded ? 'up' : ''}}"></text>
+  </view>
+
+  <view class="tip"><text class="lg-dot"></text>橙点日期均为可预约时段 · 开课前可随时取消</view>
+
+  <!-- 当日时段列表 -->
+  <view class="empty" wx:if="{{!loading && !curSlots.length}}">
+    <text>这一天暂无可约时段\n换个日期看看，或等老师排班</text>
+  </view>
+
+  <view class="slot-list">
+    <block wx:for="{{curSlots}}" wx:key="id">
+      <view class="slot-card booked" wx:if="{{item.booked}}"
+        data-bookingid="{{item.bookingId}}" data-time="{{item.start}}-{{item.end}}" bind:tap="onCancel">
+        <view class="slot-time">{{item.start}} - {{item.end}}</view>
+        <view class="slot-teacher">{{item.teacherName}} 老师</view>
+        <view class="slot-tag done">已预约</view>
+      </view>
+      <view class="slot-card" wx:else
+        data-id="{{item.id}}" data-teacher="{{item.teacherName}}" data-time="{{item.start}}-{{item.end}}" bind:tap="onBook">
+        <view class="slot-time">{{item.start}} - {{item.end}}</view>
+        <view class="slot-teacher">{{item.teacherName}} 老师</view>
+        <view class="slot-tag book">预约</view>
+      </view>
+    </block>
+  </view>
+</view>

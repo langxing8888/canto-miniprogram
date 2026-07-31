@@ -1,0 +1,119 @@
+.order {
+  padding: 20rpx 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.prompt {
+  background: #fff;
+  border: 3rpx solid #e5e5e5;
+  border-radius: 28rpx;
+  padding: 30rpx;
+  font-size: 36rpx;
+  font-weight: 600;
+  margin-bottom: 32rpx;
+}
+
+.slots-row {
+  display: flex;
+  align-items: stretch;
+  gap: 16rpx;
+  margin-bottom: 40rpx;
+}
+
+.slot-play {
+  flex-shrink: 0;
+  width: 88rpx;
+  border: 3rpx solid #1cb0f6;
+  border-radius: 24rpx;
+  background: #eef7ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slot-play-ic {
+  width: 44rpx;
+  height: 44rpx;
+}
+
+.slot-play:active {
+  transform: scale(0.95);
+}
+
+.slots {
+  flex: 1;
+  min-height: 160rpx;
+  border: 4rpx dashed #cfcfcf;
+  border-radius: 24rpx;
+  padding: 20rpx;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+  align-items: center;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.slots.correct {
+  border-color: #58cc02;
+  background: #e8f6df;
+}
+
+.slots.wrong {
+  border-color: #ff4b4b;
+  background: #ffe9e9;
+}
+
+.slots-placeholder {
+  color: #bbb;
+  font-size: 26rpx;
+  padding: 0 12rpx;
+}
+
+.pool {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18rpx;
+  justify-content: center;
+  margin-bottom: 48rpx;
+}
+
+.chip {
+  background: #fff;
+  border: 3rpx solid #e5e5e5;
+  border-bottom-width: 6rpx;
+  border-radius: 18rpx;
+  padding: 12rpx 26rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: opacity 0.2s;
+}
+
+.chip:active {
+  transform: translateY(2rpx);
+}
+
+.chip-jyut {
+  font-size: 20rpx;
+  color: #1cb0f6;
+}
+
+.chip-text {
+  font-size: 32rpx;
+  font-weight: 600;
+}
+
+.chip-used {
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.chip-filled {
+  background: #eef7ff;
+  border-color: #1cb0f6;
+}
+
+.submit {
+  margin-top: auto;
+}

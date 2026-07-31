@@ -1,0 +1,80 @@
+.pic-choice {
+  padding: 20rpx 0;
+}
+
+.stem-pic {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40rpx;
+}
+
+.stem-emoji {
+  font-size: 140rpx;
+  background: #fff;
+  border: 3rpx solid #e5e5e5;
+  border-radius: 32rpx;
+  padding: 30rpx 60rpx;
+}
+
+.stem-img {
+  width: 400rpx;
+  height: 280rpx;
+  border-radius: 32rpx;
+  border: 3rpx solid #e5e5e5;
+  background: #fff;
+}
+
+.card-img {
+  width: 100%;
+  height: 180rpx;
+  border-radius: 20rpx 20rpx 0 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24rpx;
+}
+
+.card {
+  background: #fff;
+  border: 4rpx solid #e5e5e5;
+  border-bottom-width: 8rpx;
+  border-radius: 28rpx;
+  min-height: 260rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.card:active {
+  transform: translateY(2rpx);
+}
+
+.card-emoji {
+  font-size: 110rpx;
+  line-height: 1.2;
+}
+
+.card-jyut {
+  font-size: 24rpx;
+  color: #1cb0f6;
+}
+
+.card-label {
+  font-size: 32rpx;
+  font-weight: 600;
+}
+
+.card.correct {
+  border-color: #58cc02;
+  background: #e8f6df;
+}
+
+.card.wrong {
+  border-color: #ff4b4b;
+  background: #ffe9e9;
+}

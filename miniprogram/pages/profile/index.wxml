@@ -1,0 +1,158 @@
+<view class="page">
+  <!-- 账户总览：橙色 Hero + 叠入式数据卡（视觉一体） -->
+  <view class="user-card">
+    <view class="avatar mascot-face" wx:if="{{!user}}" />
+    <view class="avatar emoji-avatar" wx:else>{{user.avatarEmoji}}</view>
+    <view class="user-info">
+      <block wx:if="{{user}}">
+        <text class="user-name">{{user.nickname}}</text>
+        <text class="user-meta">ID {{user.studentNo || '—'}}{{user.phone ? '  ·  ' + user.phone : ''}}</text>
+        <view class="streak">
+          <view class="icon icon-flame streak-ic" />
+          <text>连续打卡 {{streakDays}} 天</text>
+        </view>
+      </block>
+      <block wx:else>
+        <text class="user-name">未登录</text>
+        <text class="login-hint">登录后保存并同步学习记录</text>
+      </block>
+    </view>
+    <view wx:if="{{!user}}" class="login-btn" bindtap="openLoginSheet">注册/登录</view>
+    <view wx:else class="login-tag">已登录</view>
+  </view>
+
+  <!-- 数据条：叠在 Hero 下缘 -->
+  <view class="stats">
+    <view class="stat">
+      <text class="stat-num">{{totalMinutes}}</text>
+      <text class="stat-label">学习分钟</text>
+    </view>
+    <view class="stat-div"></view>
+    <view class="stat">
+      <text class="stat-num">{{totalAnswered}}</text>
+      <text class="stat-label">累计刷题</text>
+    </view>
+    <view class="stat-div"></view>
+    <view class="stat">
+      <text class="stat-num">{{passedCount}}</text>
+      <text class="stat-label">已通关卡</text>
+    </view>
+    <view class="stat-div"></view>
+    <view class="stat">
+      <text class="stat-num accent">{{wrongCount}}</text>
+      <text class="stat-label">待巩固</text>
+    </view>
+  </view>
+
+  <!-- 1对1 课程直达（学员版专属） -->
+  <view class="course-banner" wx:if="{{isStudentEd}}" bindtap="goMyCourse">
+    <view class="cb-left">
+      <text class="cb-title">我的 1对1 课程</text>
+      <text class="cb-sub">约课 · 课时 · 上课入口</text>
+    </view>
+    <text class="cb-go">进入 ›</text>
+  </view>
+
+  <!-- 快捷入口 -->
+  <view class="quick-grid">
+    <view class="quick-card" bindtap="goWrongBook">
+      <view class="icon icon-book quick-ic" />
+      <view class="quick-info">
+        <text class="quick-title">错题本</text>
+        <text class="quick-sub">{{wrongCount ? wrongCount + ' 题待巩固' : '暂无错题'}}</text>
+      </view>
+      <text class="quick-arrow">›</text>
+    </view>
+    <view class="quick-card" bindtap="goLevels">
+      <view class="icon icon-flag quick-ic" />
+      <view class="quick-info">
+        <text class="quick-title">继续闯关</text>
+        <text class="quick-sub">已通 {{passedCount}} 关</text>
+      </view>
+      <text class="quick-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 服务与设置 -->
+  <view class="menu">
+    <view class="menu-item" wx:if="{{versionSwitchOn}}" bindtap="onSwitchEdition">
+      <view class="m-ic-box">
+        <view class="icon icon-star m-ic"></view>
+      </view>
+      <text class="m-text">切换版本</text>
+      <text class="m-value">{{isStudentEd ? '学员版' : '用户版'}}</text>
+      <text class="m-arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="goAchievement">
+      <view class="m-ic-box">
+        <view class="icon icon-flag m-ic"></view>
+      </view>
+      <text class="m-text">学习成果</text>
+      <text class="m-arrow">›</text>
+    </view>
+    <view class="menu-item contact-wrap">
+      <view class="m-ic-box">
+        <view class="icon icon-megaphone m-ic"></view>
+      </view>
+      <text class="m-text">联系客服</text>
+      <text class="m-arrow">›</text>
+      <button class="contact-cover" open-type="contact" hover-class="none"></button>
+    </view>
+    <view class="menu-item" bindtap="onAbout">
+      <view class="m-ic-box">
+        <view class="icon icon-check m-ic"></view>
+      </view>
+      <text class="m-text">关于粤讲粤醒目</text>
+      <text class="m-arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="onClearData">
+      <view class="m-ic-box">
+        <view class="icon icon-clock m-ic"></view>
+      </view>
+      <text class="m-text">清除本地数据</text>
+      <text class="m-arrow">›</text>
+    </view>
+    <view class="menu-item" wx:if="{{user}}" bindtap="onLogout">
+      <view class="m-ic-box">
+        <view class="icon icon-lock m-ic"></view>
+      </view>
+      <text class="m-text logout-text">退出登录</text>
+      <text class="m-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 页脚 -->
+  <view class="foot-links">
+    <text class="foot-link" bindtap="goAgreement" data-type="ua">用户协议</text>
+    <text class="foot-dot">·</text>
+    <text class="foot-link" bindtap="goAgreement" data-type="privacy">隐私政策</text>
+  </view>
+
+  <!-- 登录弹层：勾选协议后才可授权 -->
+  <view class="sheet-mask" wx:if="{{showLogin}}" bindtap="closeLoginSheet">
+    <view class="login-sheet" catchtap="noop">
+      <view class="sheet-bar" />
+      <text class="sheet-title">登录粤讲粤醒目</text>
+      <text class="sheet-sub">使用微信手机号一键登录，同步你的学习进度</text>
+
+      <button
+        wx:if="{{agreed}}"
+        class="sheet-login-btn"
+        open-type="getPhoneNumber"
+        bindgetphonenumber="onPhoneLogin"
+        hover-class="none"
+      >手机号一键登录</button>
+      <button wx:else class="sheet-login-btn disabled" hover-class="none" bindtap="onNeedAgree">手机号一键登录</button>
+
+      <view class="agree-row" bindtap="toggleAgree">
+        <view class="agree-box {{agreed ? 'on' : ''}}">{{agreed ? '✓' : ''}}</view>
+        <text class="agree-text">已阅读并同意</text>
+        <text class="agree-link" catchtap="goAgreement" data-type="ua">《用户协议》</text>
+        <text class="agree-text">和</text>
+        <text class="agree-link" catchtap="goAgreement" data-type="privacy">《隐私政策》</text>
+      </view>
+
+      <text class="sheet-cancel" bindtap="closeLoginSheet">暂不登录</text>
+    </view>
+  </view>
+</view>

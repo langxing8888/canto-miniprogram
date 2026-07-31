@@ -1,0 +1,56 @@
+<view class="page">
+  <!-- 顶部统计概览 -->
+  <view class="summary">
+    <view class="sum-item">
+      <text class="sum-num orange">{{todoCount}}</text>
+      <text class="sum-label">待巩固</text>
+    </view>
+    <view class="sum-divider" />
+    <view class="sum-item">
+      <text class="sum-num green">{{doneCount}}</text>
+      <text class="sum-label">已掌握</text>
+    </view>
+    <view class="sum-divider" />
+    <view class="sum-item">
+      <text class="sum-num gray">{{totalErrors}}</text>
+      <text class="sum-label">累计错误次数</text>
+    </view>
+  </view>
+
+  <!-- 筛选 Tab -->
+  <view class="tabs">
+    <view class="tab {{tab === 'all' ? 'active' : ''}}" data-tab="all" bindtap="onTabChange">全部</view>
+    <view class="tab {{tab === 'todo' ? 'active' : ''}}" data-tab="todo" bindtap="onTabChange">待巩固</view>
+    <view class="tab {{tab === 'done' ? 'active' : ''}}" data-tab="done" bindtap="onTabChange">已掌握</view>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:if="{{!list.length}}" class="empty">
+    <view class="empty-ic-wrap">
+      <view class="icon icon-check empty-ic" />
+    </view>
+    <text class="empty-text">{{tab === 'done' ? '还没有已掌握的错题' : '暂时没有错题，继续保持！'}}</text>
+  </view>
+
+  <!-- 错题列表 -->
+  <view class="wrong-list" wx:else>
+    <view wx:for="{{list}}" wx:key="questionId" class="wrong-card {{item.resolved ? 'is-done' : ''}}">
+      <view class="accent" />
+      <view class="wrong-main">
+        <view class="wrong-top">
+          <text class="wrong-type">{{item.typeLabel}}</text>
+          <view class="wrong-status {{item.resolved ? 'ok' : 'bad'}}">
+            <view wx:if="{{item.resolved}}" class="icon icon-check status-ic" />
+            <text>{{item.resolved ? '已掌握' : '待巩固'}}</text>
+          </view>
+        </view>
+        <text class="wrong-text">{{item.text}}</text>
+        <text class="wrong-jyut" wx:if="{{item.jyut}}">{{item.jyut}}</text>
+        <view class="wrong-bottom">
+          <text class="wrong-meta">{{item.levelName}} · 错 {{item.errorCount}} 次</text>
+          <view class="retry-btn" data-level-id="{{item.levelId}}" bindtap="onRetryLevel">去重练</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

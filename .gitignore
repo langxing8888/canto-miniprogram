@@ -1,0 +1,41 @@
+# ===== 凭据 / 密钥（绝不进版本库）=====
+deploy/deploy.local.json
+*.local.json
+**/secrets.json
+**/secret*.json
+*.pem
+*.key
+
+# ===== 业务数据（含账号哈希、学员数据、答题记录、日志）=====
+server/data/
+restore_out/
+
+# ===== 媒体资源（音视频 / 教材 PDF，体积大且非源码）=====
+server/audio/
+server/materials/
+server/public/audio/
+server/public/materials/
+*.mp3
+*.mp4
+*.wav
+*.m4a
+
+# ===== 构建产物 =====
+dist/
+*.zip
+
+# ===== 项目文档与截图（含合同 / 服务器口令说明 / 手册 PDF，按「仅源码」范围排除）=====
+项目相关文档/
+
+# ===== IDE / 缓存 =====
+.qoder/
+__pycache__/
+*.pyc
+*.pyo
+
+# ===== 依赖 =====
+node_modules/
+
+# ===== 系统文件 =====
+Thumbs.db
+.DS_Store

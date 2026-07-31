@@ -1,0 +1,46 @@
+{
+  "pages": [
+    "pages/levels/index",
+    "pages/practice/index",
+    "pages/courses/index",
+    "pages/profile/index",
+    "pages/quiz/index",
+    "pages/result/index",
+    "pages/checkin/index",
+    "pages/wrongbook/index",
+    "pages/player/index",
+    "pages/agreement/index",
+    "pages/material/index",
+    "pages/mycourse/index",
+    "pages/booking/index",
+    "pages/timetable/index",
+    "pages/achievement/index",
+    "pages/homework/index",
+    "pages/mymaterials/index",
+    "pages/notes/index",
+    "pages/webview/index"
+  ],
+  "permission": {
+    "scope.writePhotosAlbum": { "desc": "用于保存教材批注页到相册" }
+  },
+  "window": {
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTitleText": "粤讲粤醒目",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f7f8fa"
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#8a94a0",
+    "selectedColor": "#58cc02",
+    "backgroundColor": "#ffffff",
+    "list": [
+      { "pagePath": "pages/levels/index", "text": "闯关" },
+      { "pagePath": "pages/practice/index", "text": "AI纠音" },
+      { "pagePath": "pages/courses/index", "text": "录播课" },
+      { "pagePath": "pages/profile/index", "text": "我的" }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

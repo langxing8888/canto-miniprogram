@@ -1,0 +1,108 @@
+<view class="wrap">
+  <!-- Tab -->
+  <view class="tabs">
+    <view class="tab {{tab === 'todo' ? 'on' : ''}}" data-tab="todo" bind:tap="onTab">待完成 ({{todoList.length}})</view>
+    <view class="tab {{tab === 'done' ? 'on' : ''}}" data-tab="done" bind:tap="onTab">已提交 ({{doneList.length}})</view>
+  </view>
+
+  <view class="empty" wx:if="{{!loading && tab === 'todo' && !todoList.length}}">太棒了，没有待完成的作业 🎉</view>
+  <view class="empty" wx:if="{{!loading && tab === 'done' && !doneList.length}}">还没有提交过作业</view>
+
+  <!-- 待完成 -->
+  <block wx:if="{{tab === 'todo'}}">
+    <view class="hw-card" wx:for="{{todoList}}" wx:key="id">
+      <view class="hw-head" data-id="{{item.id}}" bind:tap="onToggle">
+        <view class="hw-info">
+          <text class="hw-title">{{item.title}}</text>
+          <text class="hw-end">{{item.endText}}</text>
+        </view>
+        <text class="hw-toggle">{{openId === item.id ? '收起' : '去完成'}}</text>
+      </view>
+
+      <view class="hw-body" wx:if="{{openId === item.id}}">
+        <text class="hw-content" wx:if="{{item.content}}">{{item.content}}</text>
+        <view class="hw-imgs" wx:if="{{item.images.length}}">
+          <image
+            wx:for="{{item.images}}"
+            wx:for-item="img"
+            wx:key="*this"
+            src="{{img}}"
+            mode="aspectFill"
+            data-urls="{{item.images}}"
+            data-cur="{{img}}"
+            bind:tap="onPreview"
+          />
+        </view>
+
+        <!-- 提交区 -->
+        <view class="sub-area">
+          <textarea class="sub-text" placeholder="写下你的回答或备注（选填）" value="{{draftText}}" bindinput="onDraftInput" maxlength="500" />
+          <view class="sub-imgs">
+            <view class="sub-img" wx:for="{{draftImages}}" wx:key="*this">
+              <image src="{{item}}" mode="aspectFill" data-urls="{{draftImages}}" data-cur="{{item}}" bind:tap="onPreview" />
+              <text class="sub-del" data-idx="{{index}}" catch:tap="onRemoveImage">✕</text>
+            </view>
+            <view class="sub-add" bind:tap="onPickImage" wx:if="{{draftImages.length < 6}}">
+              <text>{{uploading ? '上传中…' : '＋ 拍照/选图'}}</text>
+            </view>
+          </view>
+          <view class="sub-btn {{submitting ? 'dis' : ''}}" data-id="{{item.id}}" bind:tap="onSubmit">{{submitting ? '提交中…' : '提交作业'}}</view>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 已提交/已批改 -->
+  <block wx:if="{{tab === 'done'}}">
+    <view class="hw-card" wx:for="{{doneList}}" wx:key="id">
+      <view class="hw-head" data-id="{{item.id}}" bind:tap="onToggle">
+        <view class="hw-info">
+          <text class="hw-title">{{item.title}}</text>
+          <text class="hw-end">{{item.subTime}} 提交</text>
+        </view>
+        <text class="hw-score" wx:if="{{item.sub.status === 'graded'}}">{{item.sub.score}} 分</text>
+        <text class="hw-wait" wx:else>待批改</text>
+      </view>
+
+      <view class="hw-body" wx:if="{{openId === item.id}}">
+        <!-- 批改结果 -->
+        <block wx:if="{{item.sub.status === 'graded'}}">
+          <view class="grade-box">
+            <text class="grade-score">{{item.sub.score}}</text>
+            <text class="grade-label">分</text>
+            <text class="grade-comment" wx:if="{{item.sub.comment}}">{{item.sub.comment}}</text>
+          </view>
+          <view class="sec-label" wx:if="{{item.sub.markImages.length}}">老师批改</view>
+          <view class="hw-imgs" wx:if="{{item.sub.markImages.length}}">
+            <image
+              wx:for="{{item.sub.markImages}}"
+              wx:for-item="img"
+              wx:key="*this"
+              src="{{img}}"
+              mode="aspectFill"
+              data-urls="{{item.sub.markImages}}"
+              data-cur="{{img}}"
+              bind:tap="onPreview"
+            />
+          </view>
+        </block>
+
+        <!-- 我的提交 -->
+        <view class="sec-label">我的提交</view>
+        <text class="hw-content" wx:if="{{item.sub.text}}">{{item.sub.text}}</text>
+        <view class="hw-imgs" wx:if="{{item.sub.images.length}}">
+          <image
+            wx:for="{{item.sub.images}}"
+            wx:for-item="img"
+            wx:key="*this"
+            src="{{img}}"
+            mode="aspectFill"
+            data-urls="{{item.sub.images}}"
+            data-cur="{{img}}"
+            bind:tap="onPreview"
+          />
+        </view>
+      </view>
+    </view>
+  </block>
+</view>

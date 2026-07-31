@@ -1,0 +1,20 @@
+<view class="choice" wx:if="{{question}}">
+  <!-- 题干：听力题（hideText）不显示文字，只靠音频 -->
+  <view class="stem" wx:if="{{question.stem.text && !question.stem.hideText}}">
+    <text class="stem-text">{{question.stem.text}}</text>
+    <text class="stem-jyut" wx:if="{{question.stem.jyut}}">{{question.stem.jyut}}</text>
+  </view>
+
+  <view class="options">
+    <view
+      wx:for="{{question.options}}"
+      wx:key="id"
+      class="option {{states[item.id] || ''}}"
+      data-id="{{item.id}}"
+      bindtap="onTapOption"
+    >
+      <text class="option-text">{{item.text}}</text>
+      <text class="option-sub" wx:if="{{item.sub}}">{{item.sub}}</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,8 @@
+{
+  "_说明": "复制本文件为 deploy.local.json 并填入真实值。deploy.local.json 已被 .gitignore 忽略，绝不会进版本库。",
+  "host": "106.53.39.252",
+  "ssh_user": "ubuntu",
+  "ssh_password": "<在此填入服务器 SSH 口令，切勿提交到 Git>",
+  "node_bin": "/www/server/nodejs/v20.20.2/bin",
+  "cos_host": "canto-res-1385268704.cos.ap-guangzhou.myqcloud.com"
+}

@@ -1,0 +1,43 @@
+<view class="wrap">
+  <!-- 月份切换 -->
+  <view class="cal-head">
+    <view class="cal-nav" bind:tap="onPrevMonth">‹</view>
+    <view class="cal-title">{{year}} 年 {{month}} 月<text class="cal-count" wx:if="{{monthCount}}"> · {{monthCount}} 节课</text></view>
+    <view class="cal-nav" bind:tap="onNextMonth">›</view>
+  </view>
+
+  <!-- 月历 -->
+  <view class="cal-panel">
+    <view class="cal-week">
+      <text wx:for="{{weekHead}}" wx:key="*this">{{item}}</text>
+    </view>
+    <view class="cal-grid">
+      <view
+        class="cal-cell {{item.selected ? 'sel' : ''}} {{item.isToday ? 'today' : ''}}"
+        wx:for="{{cells}}"
+        wx:key="index"
+        data-date="{{item.date}}"
+        bind:tap="onTapDay"
+      >
+        <text class="cal-day">{{item.day}}</text>
+        <text class="cal-badge" wx:if="{{item.count}}">{{item.count}}节</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 当日课程 -->
+  <view class="day-title">{{selDate}} 共 {{dayList.length}} 节课</view>
+  <view class="empty" wx:if="{{!dayList.length}}">当天没有课程安排</view>
+
+  <view class="lesson-row" wx:for="{{dayList}}" wx:key="id" bind:tap="goCourse">
+    <view class="ls-time">
+      <text class="ls-start">{{item.start}}</text>
+      <text class="ls-end">{{item.end}}</text>
+    </view>
+    <view class="ls-card">
+      <view class="ls-name">{{item.teacherName}} 老师 · 1对1</view>
+      <view class="ls-sub">上课方式：腾讯会议（开课前 5 分钟获取会议号）</view>
+    </view>
+    <text class="ls-status {{item.status}}">{{item.statusText}}</text>
+  </view>
+</view>

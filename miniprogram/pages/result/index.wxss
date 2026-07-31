@@ -1,0 +1,75 @@
+.page {
+  padding: 80rpx 40rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero {
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero.ok {
+  background: #fff6d8;
+  box-shadow: 0 12rpx 30rpx rgba(255, 200, 0, 0.3);
+}
+
+.hero.retry {
+  background: #fff0e0;
+  box-shadow: 0 12rpx 30rpx rgba(255, 150, 0, 0.25);
+}
+
+.hero-ic {
+  width: 110rpx;
+  height: 110rpx;
+}
+
+.title {
+  font-size: 44rpx;
+  font-weight: 700;
+  margin: 24rpx 0 60rpx;
+}
+
+.cards {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+  margin-bottom: 80rpx;
+}
+
+.card {
+  background: #fff;
+  border: 3rpx solid #e5e5e5;
+  border-radius: 28rpx;
+  padding: 34rpx 40rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-label {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.card-num {
+  font-size: 34rpx;
+  font-weight: 700;
+}
+
+.card-num.green { color: #58cc02; }
+.card-num.blue { color: #1cb0f6; }
+.card-num.orange { color: #ff9600; }
+
+.actions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 26rpx;
+}

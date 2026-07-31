@@ -1,0 +1,22 @@
+<view class="page">
+  <view class="notes" wx:if="{{notes.length}}">
+    <view class="note" wx:for="{{notes}}" wx:key="id">
+      <view class="n-head">
+        <text class="n-title">{{item.title}}</text>
+        <text class="n-tag" wx:if="{{item.mine}}">专属</text>
+      </view>
+      <view class="n-meta">{{item.teacherName || '老师'}} · {{item.timeText}}</view>
+      <text class="n-text" wx:if="{{item.text}}">{{item.text}}</text>
+      <view class="n-imgs" wx:if="{{item.images.length}}">
+        <image wx:for="{{item.images}}" wx:for-item="img" wx:key="*this"
+          class="n-img" src="{{img}}" mode="aspectFill"
+          data-url="{{img}}" data-imgs="{{item.images}}" bind:tap="onTapImg" />
+      </view>
+    </view>
+  </view>
+  <view class="empty" wx:elif="{{loaded}}">
+    <text class="e-emoji">📒</text>
+    <text>还没有课堂笔记</text>
+    <text class="e-sub">老师上课后上传的笔记会显示在这里</text>
+  </view>
+</view>

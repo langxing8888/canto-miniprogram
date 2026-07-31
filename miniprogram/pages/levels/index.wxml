@@ -1,0 +1,123 @@
+<view class="page">
+  <!-- 课表速览：今天/明天有 1对1 课时显示（学员版专属） -->
+  <view class="lesson-bar" wx:if="{{isStudentEd && nextLesson}}" bindtap="goMyCourse">
+    <view class="lb-dot"></view>
+    <text class="lb-text">{{nextLesson.when}} {{nextLesson.start}} · {{nextLesson.teacherName}}老师 1对1</text>
+    <text class="lb-go">去上课 ›</text>
+  </view>
+
+  <!-- Hero 头部 -->
+  <view class="hero">
+    <view class="hero-top">
+      <view class="hero-text">
+        <text class="hero-greet">{{greeting}}</text>
+        <text class="hero-title">今日继续学粤语</text>
+      </view>
+      <view class="hero-mascot" />
+    </view>
+
+    <view class="hero-stats">
+      <view class="hstat">
+        <text class="hstat-num">{{totalMinutes}}</text>
+        <text class="hstat-label">学习分钟</text>
+      </view>
+      <view class="hstat-divider" />
+      <view class="hstat">
+        <text class="hstat-num">{{totalAnswered}}</text>
+        <text class="hstat-label">累计刷题</text>
+      </view>
+      <view class="hstat-divider" />
+      <view class="hstat">
+        <text class="hstat-num">{{passedCount}}</text>
+        <text class="hstat-label">已通关卡</text>
+      </view>
+    </view>
+
+    <view class="hero-cta" bindtap="onTapContinue">
+      <view class="hero-cta-text">
+        <text class="hero-cta-label">继续挑战</text>
+        <text class="hero-cta-level">{{nextLevelName}}</text>
+      </view>
+      <view class="hero-cta-go">GO</view>
+    </view>
+  </view>
+
+  <!-- 错题本入口 -->
+  <view class="wrongbook-entry" bindtap="onTapWrongBook">
+    <view class="wrongbook-ic-wrap">
+      <view class="icon icon-book wrongbook-icon" />
+    </view>
+    <view class="wrongbook-info">
+      <text class="wrongbook-label">错题本</text>
+      <text class="wrongbook-sub">{{wrongCount ? wrongCount + ' 题待巩固，温故知新' : '暂无错题，继续保持'}}</text>
+    </view>
+    <text class="wrongbook-arrow">›</text>
+  </view>
+
+  <!-- 闯关地图 -->
+  <view class="list-head">
+    <text class="list-title">闯关地图</text>
+    <text class="list-sub">共 {{levels.length}} 关</text>
+  </view>
+
+  <view class="level-list">
+    <view
+      wx:for="{{levels}}"
+      wx:key="id"
+      class="level-card {{item.locked ? 'locked' : ''}} {{item.passed ? 'passed' : ''}} {{item.id === nextLevelId && !item.passed ? 'current' : ''}}"
+      data-id="{{item.id}}"
+      data-locked="{{item.locked}}"
+      bindtap="onTapLevel"
+    >
+      <!-- 时间线徽章 -->
+      <view class="timeline">
+        <view class="level-badge">
+          <view wx:if="{{item.locked}}" class="icon icon-lock badge-ic" />
+          <view wx:elif="{{item.passed}}" class="icon icon-star badge-ic" />
+          <text wx:else>{{item.index}}</text>
+        </view>
+        <view class="timeline-line" wx:if="{{index < levels.length - 1}}" />
+      </view>
+
+      <view class="level-info">
+        <view class="level-name-row">
+          <text class="level-name">{{item.name}}</text>
+          <text class="current-tag" wx:if="{{item.id === nextLevelId && !item.passed && !item.locked}}">进行中</text>
+        </view>
+        <text class="level-desc">{{item.desc}}</text>
+        <view class="level-best" wx:if="{{item.passed}}">
+          <view class="icon icon-check best-ic" />
+          <text>最佳首答 {{item.bestFirstCorrect}}/{{item.total}} · 可重复刷</text>
+        </view>
+      </view>
+
+      <view class="level-action" wx:if="{{!item.locked}}">
+        <view class="go-btn {{item.passed ? 'again' : ''}}">{{item.passed ? '再刷' : 'GO'}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="list-foot">更多关卡制作中，敬请期待 ···</view>
+
+  <!-- 版本选择弹窗（后台开关开启且未选择过时展示） -->
+  <view class="ed-mask" wx:if="{{showEditionSheet}}">
+    <view class="ed-panel">
+      <text class="ed-title">选择使用版本</text>
+      <text class="ed-sub">可随时在「我的」页切换</text>
+      <view class="ed-cards">
+        <view class="ed-card student" data-ed="student" bindtap="onChooseEdition">
+          <text class="ed-emoji">🎓</text>
+          <text class="ed-name">学员版</text>
+          <text class="ed-desc">机构学员专用\n约课上课 · 教材批注\n课后作业 · 课时管理</text>
+          <view class="ed-btn">我是学员</view>
+        </view>
+        <view class="ed-card user" data-ed="user" bindtap="onChooseEdition">
+          <text class="ed-emoji">🌟</text>
+          <text class="ed-name">用户版</text>
+          <text class="ed-desc">自学粤语\nAI 发音纠正 · 闯关刷题\n录播课学习</text>
+          <view class="ed-btn ghost">自学体验</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

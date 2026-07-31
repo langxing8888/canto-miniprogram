@@ -1,0 +1,10 @@
+{
+  "name": "canto-server",
+  "version": "0.1.0",
+  "description": "粤语学习小程序后端服务（零第三方依赖，Node >= 18）",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "seed": "node seed.js"
+  }
+}

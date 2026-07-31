@@ -1,0 +1,33 @@
+<view class="wrap">
+  <view class="head" wx:if="{{books.length}}">
+    <text class="head-tag">{{classTag}} 类课程</text>
+    <text class="head-prog">当前学到：第 {{curBook}} 册 · 第 {{curChapter}} 章</text>
+  </view>
+
+  <view class="empty" wx:if="{{!loading && !books.length}}">
+    <text>你的分类（{{classTag}} 类）还没有教材\n老师上传后这里会显示</text>
+  </view>
+
+  <view
+    class="book-card {{item.unlocked ? '' : 'locked'}}"
+    wx:for="{{books}}"
+    wx:key="id"
+    data-id="{{item.id}}"
+    data-unlocked="{{item.unlocked}}"
+    data-order="{{item.order}}"
+    bind:tap="onOpen"
+  >
+    <view class="book-cover {{item.unlocked ? '' : 'cover-lock'}}">
+      <text class="book-no">{{item.order}}</text>
+    </view>
+    <view class="book-info">
+      <text class="book-name">{{item.name}}</text>
+      <text class="book-meta">{{item.chapterCount ? item.chapterCount + ' 章 · ' : ''}}{{item.pages}} 页</text>
+      <text class="book-cur" wx:if="{{item.current}}">正在学 · 第 {{item.myChapter}} 章</text>
+      <text class="book-lock" wx:if="{{!item.unlocked}}">🔒 学完前册指定章节自动解锁</text>
+    </view>
+    <text class="book-go" wx:if="{{item.unlocked}}">阅读 ›</text>
+  </view>
+
+  <view class="foot-tip" wx:if="{{books.length}}">教材含老师课堂批注版，上课时实时同步</view>
+</view>

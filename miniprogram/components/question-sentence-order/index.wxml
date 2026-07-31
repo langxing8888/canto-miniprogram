@@ -1,0 +1,47 @@
+<view class="order" wx:if="{{question}}">
+  <!-- 普通话提示（翻译题） -->
+  <view class="prompt" wx:if="{{question.prompt}}">
+    <text>{{question.prompt}}</text>
+  </view>
+
+  <!-- 上方虚线槽位区（带整句播放） -->
+  <view class="slots-row">
+    <view class="slot-play" wx:if="{{question.stem.audioUrl}}" bindtap="onTapReplay">
+      <view class="icon icon-speaker slot-play-ic" />
+    </view>
+    <view class="slots {{result}}">
+      <block wx:if="{{filled.length}}">
+        <view
+          wx:for="{{filled}}"
+          wx:key="*this"
+          class="chip chip-filled"
+          data-pos="{{index}}"
+          bindtap="onTapFilled"
+        >
+          <text class="chip-jyut">{{pool[item].jyut}}</text>
+          <text class="chip-text">{{pool[item].text}}</text>
+        </view>
+      </block>
+      <text wx:else class="slots-placeholder">点击下方词块组成句子</text>
+    </view>
+  </view>
+
+  <!-- 下方词块库 -->
+  <view class="pool">
+    <view
+      wx:for="{{pool}}"
+      wx:key="index"
+      class="chip {{item.used ? 'chip-used' : ''}}"
+      data-idx="{{index}}"
+      bindtap="onTapPool"
+    >
+      <text class="chip-jyut">{{item.jyut}}</text>
+      <text class="chip-text">{{item.text}}</text>
+    </view>
+  </view>
+
+  <view
+    class="btn-primary submit {{!filled.length || locked ? 'disabled' : ''}}"
+    bindtap="onSubmit"
+  >提交</view>
+</view>

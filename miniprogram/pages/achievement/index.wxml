@@ -1,0 +1,46 @@
+<view class="wrap">
+  <!-- 顶部总览 -->
+  <view class="hero">
+    <text class="hero-title">我的学习成果</text>
+    <text class="hero-sub">每一步都算数，坚持就是进步</text>
+    <view class="hero-ring">
+      <view class="ring-num">{{passPct}}<text class="ring-pct">%</text></view>
+      <text class="ring-label">闯关进度</text>
+    </view>
+  </view>
+
+  <!-- 数据网格 -->
+  <view class="grid">
+    <view class="g-card" wx:if="{{isStudentEd}}">
+      <text class="g-num">{{lessons}}</text>
+      <text class="g-label">1对1 已上课</text>
+      <text class="g-unit">节</text>
+    </view>
+    <view class="g-card">
+      <text class="g-num">{{passed}}<text class="g-dim">/{{total}}</text></text>
+      <text class="g-label">通关关卡</text>
+      <text class="g-unit">关</text>
+    </view>
+    <view class="g-card">
+      <text class="g-num">{{speakCount}}</text>
+      <text class="g-label">AI 纠音练习</text>
+      <text class="g-unit">次</text>
+    </view>
+    <view class="g-card">
+      <text class="g-num">{{answered}}</text>
+      <text class="g-label">累计答题</text>
+      <text class="g-unit">题</text>
+    </view>
+    <view class="g-card">
+      <text class="g-num small">{{studyText}}</text>
+      <text class="g-label">学习时长</text>
+    </view>
+    <view class="g-card">
+      <text class="g-num">{{checkinDays}}</text>
+      <text class="g-label">连续打卡</text>
+      <text class="g-unit">天</text>
+    </view>
+  </view>
+
+  <view class="foot-note">数据随学习实时更新 · 登录后自动云端备份</view>
+</view>

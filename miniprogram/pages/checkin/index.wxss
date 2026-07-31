@@ -1,0 +1,61 @@
+.page {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 120rpx 40rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fff;
+}
+
+.fire-wrap {
+  width: 220rpx;
+  height: 220rpx;
+  border-radius: 50%;
+  background: #fff6d8;
+  box-shadow: 0 12rpx 30rpx rgba(255, 150, 0, 0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fire-ic {
+  width: 130rpx;
+  height: 130rpx;
+}
+
+.title {
+  font-size: 40rpx;
+  color: #666;
+  margin: 30rpx 0 10rpx;
+}
+
+.days {
+  display: flex;
+  align-items: baseline;
+  gap: 12rpx;
+  margin-bottom: 24rpx;
+}
+
+.days-num {
+  font-size: 160rpx;
+  font-weight: 800;
+  color: #ff9600;
+}
+
+.days-unit {
+  font-size: 40rpx;
+  color: #ff9600;
+  font-weight: 600;
+}
+
+.tip {
+  font-size: 26rpx;
+  color: #999;
+  margin-bottom: 100rpx;
+}
+
+.continue {
+  width: 100%;
+  box-sizing: border-box;
+}

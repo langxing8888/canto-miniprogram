@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>教师工作台 · 粤语学习</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #eef1f6; color: #1f2b3d; font-size: 14px; }
+.hidden { display: none !important; }
+.brand { color: #E5541E; }
+
+/* 登录 */
+.login-wrap { max-width: 360px; margin: 12vh auto; background: #fff; border-radius: 20px; padding: 40px 34px; box-shadow: 0 20px 50px rgba(180,120,60,.14); text-align: center; }
+.login-wrap .lg { width: 60px; height: 60px; margin: 0 auto 14px; border-radius: 16px; background: linear-gradient(135deg,#FF9A5A,#E5541E); color:#fff; display:flex; align-items:center; justify-content:center; font-size:28px; font-weight:800; }
+.login-wrap h2 { font-size: 19px; margin-bottom: 4px; }
+.login-wrap p { color: #8a94a6; font-size: 12px; margin-bottom: 22px; }
+.login-wrap input { width: 100%; padding: 12px 14px; margin-bottom: 12px; border: 1px solid #e6eaf0; border-radius: 10px; font-size: 14px; outline: none; }
+.login-wrap input:focus { border-color: #FF6B35; }
+.btn { border: 0; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 14px; }
+.btn-primary { background: linear-gradient(135deg,#FF9A5A,#E5541E); color: #fff; padding: 12px 20px; width: 100%; }
+.btn-ghost { background: #fff; border: 1px solid #e6eaf0; color: #4a5361; padding: 8px 14px; }
+
+/* 布局 */
+.app { display: none; min-height: 100vh; }
+.topbar { position: sticky; top: 0; z-index: 20; background: #fff; border-bottom: 1px solid #e6eaf0; display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; }
+.topbar .who { font-weight: 700; }
+.topbar .who small { color: #8a94a6; font-weight: 400; margin-left: 6px; font-size: 12px; }
+.tabbar { display: flex; background: #fff; border-bottom: 1px solid #e6eaf0; position: sticky; top: 49px; z-index: 19; }
+.tabbar .tab { flex: 1; text-align: center; padding: 13px 0; font-size: 14px; color: #8a94a6; cursor: pointer; border-bottom: 2px solid transparent; }
+.tabbar .tab.on { color: #E5541E; border-bottom-color: #E5541E; font-weight: 700; }
+.page { padding: 16px; max-width: 900px; margin: 0 auto; }
+.page.hidden { display: none; }
+
+/* 卡片/列表 */
+.card { background: #fff; border: 1px solid #e6eaf0; border-radius: 14px; padding: 16px; margin-bottom: 12px; }
+.sec-h { font-size: 14px; font-weight: 700; margin: 4px 2px 12px; padding-left: 10px; border-left: 3px solid #E5541E; }
+.lesson { display: flex; align-items: center; gap: 12px; padding: 13px 0; border-bottom: 1px solid #f1f4f8; }
+.lesson:last-child { border-bottom: none; }
+.lesson .date { text-align: center; min-width: 52px; }
+.lesson .date b { display: block; font-size: 17px; color: #E5541E; }
+.lesson .date span { font-size: 11px; color: #8a94a6; }
+.lesson .info { flex: 1; }
+.lesson .info .t { font-weight: 600; }
+.lesson .info .s { font-size: 12px; color: #8a94a6; margin-top: 3px; }
+.pill { font-size: 11px; padding: 3px 10px; border-radius: 20px; }
+.pill.up { background: #eaf1fc; color: #2f6bd8; }
+.pill.done { background: #eef4ec; color: #12a150; }
+.pill.note { background: #fff0e6; color: #E5541E; }
+.note-remind { background: linear-gradient(135deg,#fff4ec,#ffe6d6); border:1px solid #ffd2b3; color:#a1481e; border-radius:14px; padding:14px 16px; margin-bottom:14px; font-size:13.5px; display:flex; align-items:center; gap:10px; }
+.note-remind b { color:#E5541E; }
+.empty { text-align: center; color: #9aa3ae; padding: 40px 0; font-size: 13px; }
+
+.stu-item { display: flex; align-items: center; gap: 12px; padding: 13px 0; border-bottom: 1px solid #f1f4f8; cursor: pointer; }
+.stu-item:hover { background: #fafbfd; }
+.stu-item:last-child { border-bottom: none; }
+.stu-av { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg,#FF9A5A,#E5541E); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; }
+.stu-item .nm { flex: 1; }
+.stu-item .nm b { font-weight: 600; }
+.stu-item .nm span { display: block; font-size: 12px; color: #8a94a6; margin-top: 2px; }
+.stu-item .go { color: #c3cad4; font-size: 18px; }
+
+/* 学生详情页 */
+.stu-head { display: flex; align-items: center; gap: 14px; }
+.stu-head .big-av { width: 54px; height: 54px; border-radius: 50%; background: linear-gradient(135deg,#FF9A5A,#E5541E); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size: 20px; }
+.stu-head .hd-info b { font-size: 17px; }
+.stu-head .hd-info span { display: block; font-size: 12.5px; color: #8a94a6; margin-top: 4px; }
+.book-item { display: flex; align-items: center; gap: 12px; padding: 13px 0; border-bottom: 1px solid #f1f4f8; }
+.book-item:last-child { border-bottom: none; }
+.book-cover { width: 42px; height: 54px; border-radius: 6px; background: linear-gradient(150deg,#FF9A5A,#E5541E); color:#fff; display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:800; flex-shrink:0; }
+.book-item .bk { flex: 1; cursor: pointer; }
+.book-item .bk b { font-weight: 600; }
+.book-item .bk span { display: block; font-size: 12px; color: #8a94a6; margin-top: 2px; }
+.cur-tag { font-size: 11px; background: #fff0e6; color: #E5541E; padding: 3px 10px; border-radius: 20px; font-weight: 700; margin-left: 6px; }
+.btn-danger-ghost { background: #fff; border: 1px solid #ffd4d4; color: #e5342e; padding: 7px 12px; font-size: 12px; }
+
+/* 笔记 */
+.note-form input, .note-form textarea, .note-form select { width: 100%; padding: 10px 12px; border: 1px solid #e6eaf0; border-radius: 10px; font-size: 14px; margin-bottom: 10px; outline: none; font-family: inherit; }
+.note-form textarea { min-height: 90px; resize: vertical; }
+.note-imgs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.note-imgs img { width: 72px; height: 72px; object-fit: cover; border-radius: 8px; }
+.note-item { border-bottom: 1px solid #f1f4f8; padding: 12px 0; }
+.note-item h4 { font-size: 14px; }
+.note-item .meta { font-size: 11px; color: #9aa3ae; margin: 3px 0 6px; }
+.note-item .txt { font-size: 13px; color: #55617a; white-space: pre-wrap; }
+.note-item .nimgs { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+.note-item .nimgs img { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; }
+.toast { position: fixed; left: 50%; bottom: 40px; transform: translateX(-50%); background: rgba(30,40,50,.9); color:#fff; padding: 10px 18px; border-radius: 10px; font-size: 13px; z-index: 999; }
+
+/* 开关 */
+.switch { position: relative; display: inline-block; width: 46px; height: 26px; flex-shrink: 0; }
+.switch input { display: none; }
+.slider { position: absolute; inset: 0; background: #cfd6df; border-radius: 26px; transition: .2s; cursor: pointer; }
+.slider::before { content: ''; position: absolute; width: 20px; height: 20px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .2s; }
+.switch input:checked + .slider { background: #E5541E; }
+.switch input:checked + .slider::before { transform: translateX(20px); }
+/* 子 tab */
+.sub-tabbar { display: flex; gap: 8px; margin: 14px 0; }
+.sub-tab { padding: 7px 16px; border-radius: 20px; background: #fff; border: 1px solid #e6eaf0; font-size: 13px; color: #8a94a6; cursor: pointer; }
+.sub-tab.on { background: #E5541E; border-color: #E5541E; color: #fff; font-weight: 600; }
+/* 时段/规则/记录行 */
+.slot-li { display: flex; align-items: center; justify-content: space-between; padding: 11px 0; border-bottom: 1px solid #f1f4f8; font-size: 13.5px; }
+.slot-li:last-child { border-bottom: none; }
+.slot-li .del { color: #e5342e; cursor: pointer; font-size: 12.5px; }
+.slot-li .tag { font-size: 11px; padding: 2px 9px; border-radius: 10px; background: #eef4ec; color: #12a150; }
+.slot-li .tag.booked { background: #eaf1fc; color: #2f6bd8; }
+.date-inp { padding: 7px 10px; border: 1px solid #e6eaf0; border-radius: 8px; font-size: 13px; }
+/* KPI 行 */
+.kpi-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px,1fr)); gap: 10px; margin: 12px 0; }
+.kpi-c { background: #fff; border: 1px solid #e6eaf0; border-radius: 12px; padding: 12px; text-align: center; }
+.kpi-c b { display: block; font-size: 20px; color: #E5541E; }
+.kpi-c span { font-size: 11px; color: #8a94a6; }
+/* 点名按钮 */
+.att-btns { display: flex; gap: 6px; }
+.att-btns button { border: 1px solid #e6eaf0; background: #fff; border-radius: 8px; padding: 5px 10px; font-size: 12px; cursor: pointer; }
+.att-btns button.present { border-color: #12a150; color: #12a150; }
+.att-btns button.leave { border-color: #e8930c; color: #e8930c; }
+.att-btns button.absent { border-color: #e5342e; color: #e5342e; }
+.att-done { font-size: 12px; font-weight: 600; }
+.att-done.present { color: #12a150; } .att-done.leave { color: #e8930c; } .att-done.absent { color: #e5342e; }
+/* 弹层 */
+.modal-mask { position: fixed; inset: 0; background: rgba(0,0,0,.4); display: flex; align-items: center; justify-content: center; z-index: 500; padding: 20px; }
+.modal { background: #fff; border-radius: 16px; padding: 22px; width: 100%; max-width: 380px; max-height: 88vh; overflow-y: auto; }
+.modal h3 { font-size: 17px; margin-bottom: 16px; }
+.mrow { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+.mrow > label:first-child { width: 76px; font-size: 13px; color: #55617a; flex-shrink: 0; }
+.mrow input, .mrow select { padding: 8px 10px; border: 1px solid #e6eaf0; border-radius: 8px; font-size: 13px; }
+.seg { display: flex; border: 1px solid #e6eaf0; border-radius: 8px; overflow: hidden; }
+.seg-i { padding: 7px 16px; font-size: 13px; cursor: pointer; color: #8a94a6; }
+.seg-i.on { background: #E5541E; color: #fff; }
+.week-pick { display: flex; gap: 5px; flex-wrap: wrap; }
+.week-pick span { width: 32px; height: 32px; line-height: 32px; text-align: center; border: 1px solid #e6eaf0; border-radius: 8px; font-size: 12px; cursor: pointer; }
+.week-pick span.on { background: #E5541E; color: #fff; border-color: #E5541E; }
+.quick-times { font-size: 12px; color: #8a94a6; margin-bottom: 14px; }
+.quick-times span { display: inline-block; margin: 0 4px; padding: 3px 9px; background: #f2f4f8; border-radius: 8px; cursor: pointer; color: #55617a; }
+.modal-btns { display: flex; gap: 10px; }
+.modal-btns .btn { flex: 1; padding: 11px; }
+
+/* 周网格课表 */
+.week-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+.wk-nav { padding: 7px 14px !important; width: auto !important; font-size: 13px; }
+.wk-range { font-weight: 700; font-size: 15px; color: #1f2b3d; margin: 0 4px; }
+.week-wrap { overflow-x: auto; background: #fff; border: 1px solid #e6eaf0; border-radius: 14px; margin-bottom: 16px; -webkit-overflow-scrolling: touch; }
+.week-grid { display: grid; grid-template-columns: 46px repeat(7, minmax(96px, 1fr)); min-width: 720px; position: relative; }
+.wg-cell { border-right: 1px solid #f1f4f8; border-bottom: 1px solid #f1f4f8; min-height: 44px; position: relative; }
+.wg-time { border-right: 1px solid #eef1f4; font-size: 11px; color: #9aa3ae; text-align: center; padding-top: 2px; }
+.wg-corner, .wg-dayhead { border-bottom: 2px solid #e6eaf0; border-right: 1px solid #f1f4f8; text-align: center; padding: 8px 2px; font-size: 12px; position: sticky; top: 0; background: #fafbfd; z-index: 2; }
+.wg-dayhead b { display: block; font-size: 13px; color: #1f2b3d; }
+.wg-dayhead span { font-size: 11px; color: #9aa3ae; }
+.wg-dayhead.today { background: #fff2ea; }
+.wg-dayhead.today b { color: #E5541E; }
+/* 课块（绝对定位在对应日列） */
+.wg-ev { position: absolute; left: 2px; right: 2px; border-radius: 7px; padding: 4px 6px; font-size: 11px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.08); cursor: default; z-index: 1; }
+.wg-ev b { display: block; font-size: 11px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wg-ev small { font-size: 10px; opacity: .85; }
+.wg-ev.booked { background: linear-gradient(135deg,#4f8cff,#2f6bd8); color: #fff; }
+.wg-ev.done { background: linear-gradient(135deg,#8aa0b8,#6b7f96); color: #fff; }
+.wg-ev.open { background: #eef4ec; color: #12a150; border: 1px dashed #9ad9a8; }
+</style>
+</head>
+<body>
+
+<!-- 登录 -->
+<div class="login-wrap" id="loginBox">
+  <div class="lg">师</div>
+  <h2>教师工作台</h2>
+  <p>用你的教务账号登录 · 查看课表 / 批注 / 笔记</p>
+  <input id="lu" placeholder="账号" autocomplete="username">
+  <input id="lp" type="password" placeholder="密码" autocomplete="current-password">
+  <button class="btn btn-primary" onclick="doLogin()">登 录</button>
+</div>
+
+<!-- 主应用 -->
+<div class="app" id="app">
+  <div class="topbar">
+    <div class="who">教师工作台 <small id="whoName"></small></div>
+    <button class="btn btn-ghost" onclick="logout()">退出</button>
+  </div>
+  <div class="tabbar">
+    <div class="tab on" data-tab="schedule" onclick="switchTab(this)">我的课表</div>
+    <div class="tab" data-tab="booking" onclick="switchTab(this)">开放约课</div>
+    <div class="tab" data-tab="records" onclick="switchTab(this)">上课记录</div>
+    <div class="tab" data-tab="students" onclick="switchTab(this)">我的学生</div>
+    <div class="tab" data-tab="notes" onclick="switchTab(this)">课堂笔记</div>
+  </div>
+
+  <!-- 课表 -->
+  <div class="page" id="pg-schedule">
+    <div id="bindTip"></div>
+    <div id="noteRemind" class="note-remind hidden"></div>
+    <!-- 周网格课表 -->
+    <div class="week-head">
+      <button class="btn btn-ghost wk-nav" onclick="weekNav(-1)">‹ 上周</button>
+      <span id="weekRange" class="wk-range"></span>
+      <button class="btn btn-ghost wk-nav" onclick="weekNav(1)">下周 ›</button>
+      <button class="btn btn-ghost wk-nav" onclick="weekNav(0)">本周</button>
+    </div>
+    <div class="week-wrap"><div class="week-grid" id="weekGrid"></div></div>
+    <div class="sec-h">今日课表（点名）</div>
+    <div class="card"><div id="todayList"></div></div>
+    <div class="sec-h">即将上课</div>
+    <div class="card"><div id="upcomingList"></div></div>
+    <div class="sec-h">历史课程</div>
+    <div class="card"><div id="historyList"></div></div>
+  </div>
+
+  <!-- 开放约课 -->
+  <div class="page hidden" id="pg-booking">
+    <div class="card" id="acceptCard" style="display:flex;align-items:center;justify-content:space-between">
+      <div><b>接受约课</b><div style="font-size:12px;color:#8a94a6;margin-top:3px">关闭后学生约不到你任何时段（已约的课不受影响）</div></div>
+      <label class="switch"><input type="checkbox" id="acceptToggle" onchange="toggleAccept()"><span class="slider"></span></label>
+    </div>
+    <div class="sub-tabbar">
+      <div class="sub-tab on" data-sub="open" onclick="switchSub(this)">开放时间</div>
+      <div class="sub-tab" data-sub="rest" onclick="switchSub(this)">休息时间</div>
+    </div>
+    <!-- 开放时间 -->
+    <div id="sub-open">
+      <button class="btn btn-primary" style="width:auto;padding:10px 22px;margin-bottom:12px" onclick="openRuleModal()">＋ 新增开放时段</button>
+      <div class="sec-h">排课规则</div>
+      <div class="card"><div id="ruleList"></div></div>
+      <div class="sec-h">未来可约时段</div>
+      <div class="card"><div id="openSlotList"></div></div>
+    </div>
+    <!-- 休息时间 -->
+    <div id="sub-rest" class="hidden">
+      <button class="btn btn-primary" style="width:auto;padding:10px 22px;margin-bottom:12px" onclick="openRestModal()">＋ 新增休息时间</button>
+      <div class="card"><div id="restList"></div></div>
+    </div>
+  </div>
+
+  <!-- 上课记录 -->
+  <div class="page hidden" id="pg-records">
+    <div class="card" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <input type="date" id="recFrom" class="date-inp"> 至 <input type="date" id="recTo" class="date-inp">
+      <button class="btn btn-primary" style="width:auto;padding:8px 18px" onclick="loadRecords()">查询</button>
+    </div>
+    <div class="kpi-row" id="recStat"></div>
+    <div class="card"><div id="recList"></div></div>
+  </div>
+
+  <!-- 学生 -->
+  <div class="page hidden" id="pg-students">
+    <!-- 学生列表 -->
+    <div id="stuListView">
+      <div class="sec-h">我的学生（点击进入学生页面）</div>
+      <div class="card"><div id="stuList"></div></div>
+    </div>
+    <!-- 学生详情页：课本 + 批注 + 专属笔记 -->
+    <div id="stuDetailView" class="hidden">
+      <button class="btn btn-ghost" style="margin-bottom:12px" onclick="backToStuList()">‹ 返回学生列表</button>
+      <div class="card stu-head" id="sdHead"></div>
+      <div class="sec-h">他的课本（点击进入批注）</div>
+      <div class="card"><div id="sdBooks"></div></div>
+      <div class="sec-h">发给他的专属笔记</div>
+      <div class="card">
+        <div id="sdNotes"></div>
+        <button class="btn btn-primary" style="width:auto;padding:10px 22px;margin-top:10px" onclick="quickNoteFromDetail()">＋ 给他发笔记</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 笔记 -->
+  <div class="page hidden" id="pg-notes">
+    <div class="sec-h">发布课堂笔记</div>
+    <div class="card note-form">
+      <select id="ntStu"><option value="">发给全体学生（公开）</option></select>
+      <input id="ntTitle" placeholder="笔记标题（如：第1课重点）" maxlength="60">
+      <textarea id="ntText" placeholder="笔记内容 / 课后提醒…"></textarea>
+      <div class="note-imgs" id="ntImgs"></div>
+      <input type="file" id="ntFile" accept="image/*" hidden>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-ghost" onclick="document.getElementById('ntFile').click()">＋ 加图片</button>
+        <button class="btn btn-primary" style="flex:1" onclick="submitNote()">发布笔记</button>
+      </div>
+    </div>
+    <div class="sec-h">我发布的笔记</div>
+    <div class="card"><div id="noteList"></div></div>
+  </div>
+</div>
+
+<div class="toast hidden" id="toast"></div>
+
+<!-- 新增开放时段弹层 -->
+<div class="modal-mask hidden" id="ruleModal">
+  <div class="modal">
+    <h3>新增开放时段</h3>
+    <div class="mrow"><label>排课方式</label>
+      <div class="seg"><span class="seg-i on" data-mode="rule" onclick="pickMode(this)">规则排课</span><span class="seg-i" data-mode="free" onclick="pickMode(this)">自由排课</span></div>
+    </div>
+    <div class="mrow" id="weekRow"><label>每周上课日</label>
+      <div class="week-pick" id="weekPick"></div>
+    </div>
+    <div class="mrow hidden" id="dateRow"><label>上课日期</label><input type="date" id="rmDate"></div>
+    <div class="mrow"><label>上课时间</label>
+      <div style="display:flex;align-items:center;gap:6px"><input type="time" id="rmStart" value="10:00"> – <input type="time" id="rmEnd" value="11:00"></div>
+    </div>
+    <div class="mrow" id="startRow"><label>开始日期</label><input type="date" id="rmStartDate"></div>
+    <div class="mrow" id="endRow"><label>结束方式</label>
+      <select id="rmEndType" onchange="onEndType()">
+        <option value="none">不结束（长期）</option>
+        <option value="count">按次数</option>
+        <option value="date">按结束日期</option>
+      </select>
+    </div>
+    <div class="mrow hidden" id="countRow"><label>上课次数</label><input type="number" id="rmCount" value="30" min="1"></div>
+    <div class="mrow hidden" id="endDateRow"><label>结束日期</label><input type="date" id="rmEndDate"></div>
+    <div class="mrow"><label>节假日排课</label><label class="switch"><input type="checkbox" id="rmSkipHoliday"><span class="slider"></span></label><span style="font-size:12px;color:#8a94a6">开=节假日照排；关=法定节假日跳过</span></div>
+    <div class="quick-times">常用：<span onclick="qt('09:00','10:00')">9-10</span><span onclick="qt('10:00','11:00')">10-11</span><span onclick="qt('14:00','15:00')">14-15</span><span onclick="qt('19:00','20:00')">19-20</span></div>
+    <div class="modal-btns"><button class="btn btn-ghost" onclick="closeModal('ruleModal')">取消</button><button class="btn btn-primary" onclick="submitRule()">确定</button></div>
+  </div>
+</div>
+
+<!-- 新增休息时间弹层 -->
+<div class="modal-mask hidden" id="restModal">
+  <div class="modal">
+    <h3>新增休息时间</h3>
+    <div class="mrow"><label>日期</label><input type="date" id="rsDate"></div>
+    <div class="mrow"><label>时段</label><div style="display:flex;align-items:center;gap:6px"><input type="time" id="rsStart" value="12:00"> – <input type="time" id="rsEnd" value="14:00"></div></div>
+    <div class="mrow"><label>备注</label><input id="rsNote" placeholder="如：午休 / 有事" maxlength="50"></div>
+    <div class="modal-btns"><button class="btn btn-ghost" onclick="closeModal('restModal')">取消</button><button class="btn btn-primary" onclick="submitRest()">确定</button></div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

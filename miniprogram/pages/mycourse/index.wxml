@@ -1,0 +1,77 @@
+<view class="wrap">
+  <!-- 课时包卡 -->
+  <view class="pack-card">
+    <view class="pack-head">
+      <text class="pack-title">yulia 粤语 1对1</text>
+      <text class="pack-status">{{pack.remain > 0 ? '进行中' : '待充值'}}</text>
+    </view>
+    <view class="pack-nums">
+      <view class="pk-item">
+        <text class="pk-num">{{pack.remain}}</text>
+        <text class="pk-label">剩余课时</text>
+      </view>
+      <view class="pk-div"></view>
+      <view class="pk-item">
+        <text class="pk-num">{{pack.used}}</text>
+        <text class="pk-label">已上课时</text>
+      </view>
+      <view class="pk-div"></view>
+      <view class="pk-item">
+        <text class="pk-num">{{pack.total}}</text>
+        <text class="pk-label">总课时</text>
+      </view>
+    </view>
+    <view class="pack-foot" wx:if="{{pack.expireText}}">有效期至 {{pack.expireText}}</view>
+  </view>
+
+  <!-- 约课/课表/作业/教材入口 -->
+  <view class="btn-row">
+    <view class="book-btn" bind:tap="onGoBooking">＋ 约课</view>
+    <view class="cal-btn" bind:tap="onGoTimetable">课表</view>
+    <view class="cal-btn" bind:tap="onGoHomework">作业<text class="dot-badge" wx:if="{{hwUnread}}">{{hwUnread}}</text></view>
+    <view class="cal-btn" bind:tap="onGoMaterials">教材</view>
+    <view class="cal-btn" bind:tap="onGoNotes">笔记</view>
+  </view>
+
+  <!-- 出勤考核卡（有已上课才显示） -->
+  <view class="attend-card" wx:if="{{logged && attendStat.totalDone > 0}}">
+    <view class="at-item"><text class="at-num at-rate">{{attendStat.rate}}%</text><text class="at-label">出勤率</text></view>
+    <view class="at-div"></view>
+    <view class="at-item"><text class="at-num">{{attendStat.present}}</text><text class="at-label">出勤</text></view>
+    <view class="at-item"><text class="at-num">{{attendStat.leave}}</text><text class="at-label">请假</text></view>
+    <view class="at-item"><text class="at-num at-absent">{{attendStat.absent}}</text><text class="at-label">缺课</text></view>
+  </view>
+
+  <!-- 课程列表 -->
+  <view class="sec-title">我的课程</view>
+  <view class="empty" wx:if="{{!loading && !bookings.length}}">
+    <text>{{logged ? '还没有课程，点上方按钮约第一节课吧' : '登录后查看课程与课时'}}</text>
+  </view>
+
+  <view class="bk-card" wx:for="{{bookings}}" wx:key="id">
+    <view class="bk-row1">
+      <text class="bk-time">{{item.date}} {{item.start}}-{{item.end}}</text>
+      <text class="bk-status s-{{item.status}}">{{item.statusText}}</text>
+    </view>
+    <view class="bk-row2">
+      <text class="bk-teacher">{{item.teacherName}} 老师 · 1对1</text>
+      <text class="bk-attend a-{{item.attend}}" wx:if="{{item.attendText}}">{{item.attendText}}</text>
+    </view>
+
+    <!-- 时间窗内：会议号 + 复制入会 -->
+    <view class="bk-meeting" wx:if="{{item.meetingUrl || item.meetingCode}}">
+      <view class="bk-meet-info">
+        <text class="bk-meet-label">腾讯会议号</text>
+        <text class="bk-meet-code">{{item.meetingCode || '见链接'}}</text>
+      </view>
+      <view class="bk-copy" data-url="{{item.meetingUrl}}" data-code="{{item.meetingCode}}" bind:tap="onCopyLink">复制链接入会</view>
+    </view>
+
+    <!-- 未到时间窗 -->
+    <view class="bk-wait" wx:elif="{{item.waitingLink}}">开课前 5 分钟可获取会议号入会</view>
+
+    <view class="bk-ops" wx:if="{{item.canCancel}}">
+      <text class="bk-cancel" data-id="{{item.id}}" bind:tap="onCancelBooking">取消预约</text>
+    </view>
+  </view>
+</view>

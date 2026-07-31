@@ -1,0 +1,20 @@
+<view class="page">
+  <video
+    id="coursePlayer"
+    class="player"
+    src="{{url}}"
+    autoplay
+    controls
+    show-fullscreen-btn
+    enable-play-gesture
+    playback-rate="{{1}}"
+    bindloadedmetadata="onLoadedMeta"
+    bindtimeupdate="onTimeUpdate"
+    bindended="onEnded"
+    binderror="onError"
+  />
+  <view class="tips">
+    <text class="tips-title">{{name}}</text>
+    <text class="tips-sub">支持倍速播放（播放器内调节）· 退出自动记录进度，下次续播</text>
+  </view>
+</view>

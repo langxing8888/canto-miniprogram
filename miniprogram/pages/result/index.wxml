@@ -1,0 +1,27 @@
+<view class="page">
+  <view class="hero {{passed ? 'ok' : 'retry'}}">
+    <view class="icon {{passed ? 'icon-trophy' : 'icon-flag'}} hero-ic" />
+  </view>
+  <view class="title">{{passed ? '恭喜通关！' : '差一点点，再试试！'}}</view>
+
+  <view class="cards">
+    <view class="card">
+      <text class="card-label">首次作答正确率</text>
+      <text class="card-num green">{{first}}/{{total}} · {{firstRate}}%</text>
+    </view>
+    <view class="card">
+      <text class="card-label">最终完成正确率</text>
+      <text class="card-num blue">{{final}}/{{total}} · {{finalRate}}%</text>
+    </view>
+    <view class="card">
+      <text class="card-label">本关用时</text>
+      <text class="card-num orange">{{timeText}}</text>
+    </view>
+  </view>
+
+  <view class="actions">
+    <view wx:if="{{passed}}" class="btn-primary" bindtap="onContinue">继续学习</view>
+    <view wx:else class="btn-primary" bindtap="onRetry">再挑战一次</view>
+    <view class="btn-plain" bindtap="onBackHome">返回关卡列表</view>
+  </view>
+</view>

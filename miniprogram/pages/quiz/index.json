@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "闯关中",
+  "disableScroll": false,
+  "usingComponents": {
+    "audio-player": "/components/audio-player/index",
+    "question-pic-choice": "/components/question-pic-choice/index",
+    "question-choice": "/components/question-choice/index",
+    "question-sentence-order": "/components/question-sentence-order/index"
+  }
+}

@@ -1,0 +1,105 @@
+page {
+  background: #f7f8fa;
+}
+
+.page {
+  padding: 30rpx 30rpx 60rpx;
+}
+
+/* 顶部 Hero */
+.doc-hero {
+  background: linear-gradient(150deg, #FF9A5A, #FF6B35 55%, #E5541E);
+  border-radius: 32rpx;
+  padding: 40rpx 36rpx;
+  display: flex;
+  align-items: center;
+  gap: 26rpx;
+  box-shadow: 0 14rpx 32rpx rgba(255, 107, 53, 0.28);
+  margin-bottom: 30rpx;
+}
+
+.hero-icon {
+  width: 104rpx;
+  height: 104rpx;
+  border-radius: 28rpx;
+  background: rgba(255, 255, 255, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 56rpx;
+  flex-shrink: 0;
+  box-shadow: 0 6rpx 16rpx rgba(0, 0, 0, 0.1);
+}
+
+.doc-title {
+  display: block;
+  font-size: 42rpx;
+  font-weight: 800;
+  color: #fff;
+}
+
+.doc-updated {
+  display: inline-block;
+  font-size: 22rpx;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1rpx solid rgba(255, 255, 255, 0.4);
+  border-radius: 999rpx;
+  padding: 6rpx 18rpx;
+  margin-top: 12rpx;
+}
+
+/* 条款卡片 */
+.doc-card {
+  background: #fff;
+  border-radius: 28rpx;
+  padding: 32rpx 30rpx;
+  margin-bottom: 22rpx;
+  box-shadow: 0 4rpx 14rpx rgba(31, 41, 55, 0.04);
+}
+
+.sec-head {
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+  margin-bottom: 16rpx;
+}
+
+.sec-bar {
+  width: 8rpx;
+  height: 32rpx;
+  border-radius: 999rpx;
+  background: linear-gradient(180deg, #FF9A5A, #FF6B35);
+  flex-shrink: 0;
+}
+
+.sec-h {
+  font-size: 30rpx;
+  font-weight: 800;
+  color: #1f2937;
+}
+
+.sec-p {
+  display: block;
+  font-size: 26rpx;
+  line-height: 1.8;
+  color: #4b5563;
+  white-space: pre-line;
+}
+
+/* 底部落款 */
+.doc-foot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20rpx;
+  padding: 30rpx 0 10rpx;
+  font-size: 22rpx;
+  color: #c2c9d1;
+}
+
+.foot-line {
+  width: 60rpx;
+  height: 1rpx;
+  background: #e5e7eb;
+}

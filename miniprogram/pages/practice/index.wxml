@@ -1,0 +1,82 @@
+<view class="page">
+  <!-- 顶部说明 -->
+  <view class="hero">
+    <view class="hero-text">
+      <text class="hero-title">AI 纠音训练场</text>
+      <text class="hero-sub">跟读标准音 · AI 智能评分 · 逐字纠错</text>
+    </view>
+    <view class="icon icon-mic hero-ic" />
+  </view>
+
+  <!-- 口语题列表 -->
+  <view class="p-list">
+    <view wx:for="{{list}}" wx:key="id" class="p-card {{activeId === item.id ? 'open' : ''}}">
+      <view class="p-head" data-id="{{item.id}}" bindtap="onTapItem">
+        <view class="p-info">
+          <text class="p-subtype">{{item.subtype}}</text>
+          <text class="p-text">{{item.stem.text}}</text>
+          <text class="p-jyut">{{item.stem.jyut}}</text>
+        </view>
+        <text class="p-arrow">{{activeId === item.id ? '收起' : '练习'}}</text>
+      </view>
+
+      <!-- 展开的练习面板 -->
+      <view class="p-panel" wx:if="{{activeId === item.id}}">
+        <block wx:if="{{!recordPath}}">
+          <view
+            class="record-btn {{recording ? 'recording' : ''}}"
+            bindtouchstart="onRecordStart"
+            bindtouchend="onRecordEnd"
+            bindtouchcancel="onRecordEnd"
+          >
+            <view class="icon icon-mic record-ic" />
+            <text class="record-tip">{{recording ? '松开结束录音' : '长按开始跟读'}}</text>
+          </view>
+          <view class="std-row" bindtap="onPlayStandard" data-url="{{item.stem.audioUrl}}">
+            <view class="icon icon-speaker std-ic" />
+            <text>先听标准音</text>
+          </view>
+        </block>
+        <block wx:else>
+          <!-- 评分中 -->
+          <view class="assess-loading" wx:if="{{assessing}}">
+            <view class="assess-dot d1" /><view class="assess-dot d2" /><view class="assess-dot d3" />
+            <text class="assess-txt">AI 正在听你的发音…</text>
+          </view>
+
+          <!-- 评分结果 -->
+          <view class="assess-result" wx:elif="{{result}}">
+            <view class="score-ring {{scoreLevel}}">
+              <text class="score-num">{{result.score}}</text>
+              <text class="score-unit">分</text>
+            </view>
+            <view class="word-row">
+              <text
+                wx:for="{{result.words}}"
+                wx:key="index"
+                class="word-char {{item.ok ? 'ok' : 'bad'}}"
+              >{{item.char}}</text>
+            </view>
+            <text class="assess-tip" wx:if="{{scoreLevel === 'good'}}">好犀利！发音好标准 👏</text>
+            <text class="assess-tip" wx:elif="{{scoreLevel === 'mid'}}">唔错！红色字再多练下</text>
+            <text class="assess-tip" wx:else>{{result.hyp ? 'AI 听到的是「' + result.hyp + '」，对比标准音再试下' : '没听清楚，靠近啲话筒再讲一次'}}</text>
+          </view>
+
+          <view class="compare-row">
+            <view class="compare-btn {{playingSelf ? 'active' : ''}}" bindtap="onPlaySelf">
+              <view class="icon {{playingSelf ? 'icon-speaker' : 'icon-user'}} compare-ic" />
+              <text>听自己的录音</text>
+            </view>
+            <view class="compare-btn" bindtap="onPlayStandard" data-url="{{item.stem.audioUrl}}">
+              <view class="icon icon-megaphone compare-ic" />
+              <text>听标准音</text>
+            </view>
+          </view>
+          <view class="btn-plain retry-btn" bindtap="onRetry">再读一次</view>
+        </block>
+      </view>
+    </view>
+  </view>
+
+  <view class="foot-tip">AI 评分基于粤语语音识别逐字比对，红色字表示发音待改进</view>
+</view>

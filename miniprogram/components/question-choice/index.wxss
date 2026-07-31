@@ -1,0 +1,65 @@
+.choice {
+  padding: 20rpx 0;
+}
+
+.stem {
+  background: #fff;
+  border: 3rpx solid #e5e5e5;
+  border-radius: 28rpx;
+  padding: 36rpx;
+  margin-bottom: 40rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 10rpx;
+}
+
+.stem-text {
+  font-size: 42rpx;
+  font-weight: 700;
+}
+
+.stem-jyut {
+  font-size: 28rpx;
+  color: #1cb0f6;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 22rpx;
+}
+
+.option {
+  background: #fff;
+  border: 4rpx solid #e5e5e5;
+  border-bottom-width: 8rpx;
+  border-radius: 24rpx;
+  padding: 28rpx 32rpx;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.option:active {
+  transform: translateY(2rpx);
+}
+
+.option-text {
+  font-size: 32rpx;
+  font-weight: 500;
+}
+
+.option-sub {
+  display: block;
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 6rpx;
+}
+
+.option.correct {
+  border-color: #58cc02;
+  background: #e8f6df;
+}
+
+.option.wrong {
+  border-color: #ff4b4b;
+  background: #ffe9e9;
+}

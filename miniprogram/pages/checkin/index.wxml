@@ -1,0 +1,12 @@
+<view class="page">
+  <view class="fire-wrap">
+    <view class="icon icon-flame fire-ic" />
+  </view>
+  <view class="title">已经打卡</view>
+  <view class="days">
+    <text class="days-num">{{days}}</text>
+    <text class="days-unit">天</text>
+  </view>
+  <view class="tip">坚持每日学习，粤语越讲越流利！</view>
+  <view class="btn-primary continue" bindtap="onContinue">继续学习</view>
+</view>

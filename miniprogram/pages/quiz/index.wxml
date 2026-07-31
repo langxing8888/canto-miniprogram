@@ -1,0 +1,113 @@
+<view class="page">
+  <!-- 顶部：退出 | 进度条 | 计时器 -->
+  <view class="topbar">
+    <view class="exit" bindtap="onExit">✕</view>
+    <view class="progress">
+      <view class="progress-track">
+        <view class="progress-fill" style="width: {{total ? doneCount / total * 100 : 0}}%" />
+      </view>
+      <text class="progress-text">{{doneCount}}/{{total}}</text>
+    </view>
+    <view class="timer">
+      <view class="icon icon-clock timer-ic" />
+      <text>{{timerText}}</text>
+    </view>
+  </view>
+
+  <block wx:if="{{current}}">
+    <!-- 左上角小人播放入口 + 题目说明 -->
+    <view class="question-head">
+      <audio-player
+        id="player"
+        src="{{current.stem.audioUrl || ''}}"
+        slowable="{{current.stem.slowable || false}}"
+        question-id="{{current.id}}"
+      />
+      <text class="question-title">{{current.title || (current.type === 'speaking' ? '口语练习 · ' + current.subtype : '')}}</text>
+    </view>
+
+    <!-- 按题型挂载组件 -->
+    <question-pic-choice
+      wx:if="{{current.type === 'pic_choice'}}"
+      question="{{current}}"
+      bind:answered="onAnswered"
+    />
+    <question-choice
+      wx:elif="{{current.type === 'choice'}}"
+      question="{{current}}"
+      bind:answered="onAnswered"
+    />
+    <question-sentence-order
+      wx:elif="{{current.type === 'sentence_order'}}"
+      question="{{current}}"
+      bind:answered="onAnswered"
+      bind:replay="onReplayAudio"
+    />
+
+    <!-- 口语题（本地录音对比听：录音 → 听自己 vs 听标准音） -->
+    <view wx:elif="{{current.type === 'speaking'}}" class="speaking">
+      <view class="speaking-card">
+        <text class="speaking-text">{{current.stem.text}}</text>
+        <text class="speaking-jyut">{{current.stem.jyut}}</text>
+      </view>
+
+      <!-- 未录音：长按录音 -->
+      <block wx:if="{{!recordPath}}">
+        <view
+          class="record-btn {{recording ? 'recording' : ''}}"
+          bindtouchstart="onRecordStart"
+          bindtouchend="onRecordEnd"
+          bindtouchcancel="onRecordEnd"
+        >
+          <view class="icon icon-mic record-ic" />
+          <text class="record-tip">{{recording ? '松开结束录音' : '长按开始跟读'}}</text>
+        </view>
+      </block>
+
+      <!-- 已录音：AI 评分 + 对比听 -->
+      <block wx:else>
+        <view class="assess-loading" wx:if="{{assessing}}">
+          <view class="assess-dot d1" /><view class="assess-dot d2" /><view class="assess-dot d3" />
+          <text class="assess-txt">AI 正在听你的发音…</text>
+        </view>
+
+        <view class="assess-result" wx:elif="{{assessResult}}">
+          <view class="score-ring {{scoreLevel}}">
+            <text class="score-num">{{assessResult.score}}</text>
+            <text class="score-unit">分</text>
+          </view>
+          <view class="word-row">
+            <text
+              wx:for="{{assessResult.words}}"
+              wx:key="index"
+              class="word-char {{item.ok ? 'ok' : 'bad'}}"
+            >{{item.char}}</text>
+          </view>
+          <text class="assess-tip" wx:if="{{scoreLevel === 'good'}}">好犀利！发音好标准 👏</text>
+          <text class="assess-tip" wx:elif="{{scoreLevel === 'mid'}}">唔错！红色字再多练下</text>
+          <text class="assess-tip" wx:else>{{assessResult.hyp ? 'AI 听到的是「' + assessResult.hyp + '」' : '没听清楚，再讲一次'}}</text>
+        </view>
+
+        <view class="compare-row">
+          <view class="compare-btn self {{playingSelf ? 'active' : ''}}" bindtap="onPlaySelf">
+            <view class="icon {{playingSelf ? 'icon-speaker' : 'icon-user'}} compare-ic" />
+            <text>听自己的录音</text>
+          </view>
+          <view class="compare-btn std" bindtap="onPlayStandard">
+            <view class="icon icon-megaphone compare-ic" />
+            <text>听标准音</text>
+          </view>
+        </view>
+        <view class="btn-primary speak-done" bindtap="onSpeakingDone">{{assessResult && assessResult.score < 60 ? '继续闯关' : '读好了，继续'}}</view>
+        <view class="btn-plain speak-retry" bindtap="onRecordRetry">再读一次</view>
+      </block>
+
+      <view class="btn-plain skip-btn" bindtap="onSkipSpeaking">现在不方便口语练习，跳过</view>
+    </view>
+  </block>
+
+  <!-- 底部判定反馈条 -->
+  <view class="feedback {{feedback.correct ? 'good' : 'bad'}}" wx:if="{{feedback.show}}">
+    <text>{{feedback.message}}</text>
+  </view>
+</view>

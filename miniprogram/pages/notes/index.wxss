@@ -1,0 +1,42 @@
+.page { padding: 20rpx 24rpx 60rpx; }
+
+.note {
+  background: #fff;
+  border-radius: 18rpx;
+  padding: 26rpx 24rpx;
+  margin-bottom: 18rpx;
+  box-shadow: 0 3rpx 14rpx rgba(30, 45, 75, 0.05);
+}
+
+.n-head { display: flex; align-items: center; gap: 12rpx; }
+.n-title { font-size: 30rpx; font-weight: 700; color: #2b3440; flex: 1; }
+.n-tag {
+  font-size: 20rpx;
+  color: #fff;
+  background: linear-gradient(135deg, #FF9A5A, #E5541E);
+  padding: 3rpx 14rpx;
+  border-radius: 999rpx;
+}
+.n-meta { font-size: 22rpx; color: #9aa3ae; margin-top: 8rpx; }
+.n-text {
+  display: block;
+  font-size: 27rpx;
+  color: #55617a;
+  line-height: 1.7;
+  margin-top: 14rpx;
+  white-space: pre-wrap;
+}
+.n-imgs { display: flex; flex-wrap: wrap; gap: 12rpx; margin-top: 16rpx; }
+.n-img { width: 210rpx; height: 210rpx; border-radius: 12rpx; }
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 140rpx 0;
+  color: #9aa3ae;
+  font-size: 28rpx;
+  gap: 10rpx;
+}
+.e-emoji { font-size: 90rpx; }
+.e-sub { font-size: 23rpx; color: #b6bec7; }

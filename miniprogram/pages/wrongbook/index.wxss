@@ -1,0 +1,206 @@
+.page {
+  padding: 30rpx;
+}
+
+/* ============ 统计概览 ============ */
+.summary {
+  background: #fff;
+  border: 3rpx solid #eef1f4;
+  border-radius: 28rpx;
+  display: flex;
+  align-items: center;
+  padding: 32rpx 0;
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 14rpx rgba(0, 0, 0, 0.04);
+}
+
+.sum-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6rpx;
+}
+
+.sum-num {
+  font-size: 46rpx;
+  font-weight: 800;
+}
+
+.sum-num.orange { color: #ff9600; }
+.sum-num.green { color: #58cc02; }
+.sum-num.gray { color: #8a94a0; }
+
+.sum-label {
+  font-size: 22rpx;
+  color: #8a94a0;
+}
+
+.sum-divider {
+  width: 2rpx;
+  height: 56rpx;
+  background: #eef1f4;
+}
+
+/* ============ 筛选 Tab ============ */
+.tabs {
+  display: flex;
+  background: #eef1f4;
+  border-radius: 999rpx;
+  padding: 6rpx;
+  margin-bottom: 28rpx;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #8a94a0;
+  padding: 14rpx 0;
+  border-radius: 999rpx;
+  transition: all 0.2s;
+}
+
+.tab.active {
+  background: #fff;
+  color: #FF6B35;
+  box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.08);
+}
+
+/* ============ 空状态 ============ */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28rpx;
+  padding-top: 160rpx;
+}
+
+.empty-ic-wrap {
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 50%;
+  background: #FFF4EC;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-ic {
+  width: 110rpx;
+  height: 110rpx;
+}
+
+.empty-text {
+  color: #8a94a0;
+  font-size: 28rpx;
+}
+
+/* ============ 错题卡片 ============ */
+.wrong-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.wrong-card {
+  background: #fff;
+  border: 3rpx solid #eef1f4;
+  border-radius: 26rpx;
+  display: flex;
+  overflow: hidden;
+  box-shadow: 0 4rpx 14rpx rgba(0, 0, 0, 0.04);
+}
+
+/* 左侧状态色条 */
+.accent {
+  width: 10rpx;
+  flex-shrink: 0;
+  background: #ff9600;
+}
+
+.wrong-card.is-done .accent {
+  background: #58cc02;
+}
+
+.wrong-card.is-done {
+  opacity: 0.75;
+}
+
+.wrong-main {
+  flex: 1;
+  padding: 26rpx 28rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.wrong-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.wrong-type {
+  font-size: 22rpx;
+  font-weight: 600;
+  color: #1cb0f6;
+  background: #eef7ff;
+  border-radius: 999rpx;
+  padding: 4rpx 16rpx;
+}
+
+.wrong-status {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  font-size: 22rpx;
+  font-weight: 700;
+}
+
+.wrong-status.ok { color: #58cc02; }
+.wrong-status.bad { color: #ff9600; }
+
+.status-ic {
+  width: 26rpx;
+  height: 26rpx;
+}
+
+.wrong-text {
+  font-size: 34rpx;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.wrong-jyut {
+  font-size: 24rpx;
+  color: #1cb0f6;
+}
+
+.wrong-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6rpx;
+}
+
+.wrong-meta {
+  font-size: 22rpx;
+  color: #8a94a0;
+}
+
+.retry-btn {
+  font-size: 24rpx;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, #FF9A5A, #FF6B35);
+  border-radius: 999rpx;
+  padding: 10rpx 30rpx;
+  box-shadow: 0 4rpx 0 #E5541E;
+}
+
+.retry-btn:active {
+  transform: translateY(2rpx);
+  box-shadow: none;
+}

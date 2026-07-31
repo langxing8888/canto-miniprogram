@@ -1,0 +1,22 @@
+<view class="pic-choice" wx:if="{{question}}">
+  <!-- 看图选词：题干展示大图（真实图片优先，emoji 为占位） -->
+  <view class="stem-pic" wx:if="{{question.stem.image || question.stem.emoji}}">
+    <image wx:if="{{question.stem.image}}" class="stem-img" src="{{question.stem.image}}" mode="aspectFill" />
+    <text wx:else class="stem-emoji">{{question.stem.emoji}}</text>
+  </view>
+
+  <view class="grid">
+    <view
+      wx:for="{{question.options}}"
+      wx:key="id"
+      class="card {{states[item.id] || ''}}"
+      data-id="{{item.id}}"
+      bindtap="onTapOption"
+    >
+      <image wx:if="{{item.image}}" class="card-img" src="{{item.image}}" mode="aspectFill" />
+      <text wx:elif="{{item.emoji}}" class="card-emoji">{{item.emoji}}</text>
+      <text class="card-jyut" wx:if="{{item.jyut}}">{{item.jyut}}</text>
+      <text class="card-label">{{item.label}}</text>
+    </view>
+  </view>
+</view>

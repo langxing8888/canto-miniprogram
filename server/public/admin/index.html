@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>粤语学习 · 后台管理</title>
+<link rel="stylesheet" href="admin.css">
+<link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+<div class="layout hidden" id="appLayout">
+  <!-- 侧边栏 -->
+  <aside class="sidebar">
+    <div class="logo">
+      <span class="logo-icon" id="sideLogo">粤</span>
+      <div class="logo-text">
+        <b id="sideTitle">粤语学习后台</b>
+        <small id="sideSubtitle">教务管理平台</small>
+      </div>
+    </div>
+    <nav class="menu">
+      <a class="menu-item active" data-page="dashboard"><i class="mi mi-dash"></i>数据概览</a>
+      <a class="menu-item" data-page="questions"><i class="mi mi-book"></i>题库管理</a>
+      <a class="menu-item" data-page="qstats"><i class="mi mi-chart"></i>题目统计</a>
+      <a class="menu-item" data-page="levels"><i class="mi mi-puzzle"></i>关卡组装</a>
+      <a class="menu-item" data-page="courses"><i class="mi mi-video"></i>录播课管理</a>
+      <a class="menu-item" data-page="students"><i class="mi mi-users"></i>学生管理</a>
+      <a class="menu-item" data-page="booking"><i class="mi mi-cal"></i>约课管理</a>
+      <a class="menu-item" data-page="usage"><i class="mi mi-cloud"></i>用量监控</a>
+      <a class="menu-item" data-page="settings"><i class="mi mi-gear"></i>系统设置</a>
+    </nav>
+    <div class="sidebar-foot">粤语学习 · 教务管理系统<br>v1.0 · 数据云端实时同步</div>
+  </aside>
+
+  <!-- 主区域 -->
+  <main class="main">
+    <header class="topbar">
+      <h1 id="pageTitle">数据概览</h1>
+      <div class="topbar-right">
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="切换日间 / 夜间模式">🌙</button>
+        <div class="admin-menu" id="adminMenu">
+          <span class="admin-chip" id="adminChip" onclick="toggleAdminMenu(event)">超级管理员 <span class="caret">▾</span></span>
+          <div class="admin-dropdown">
+            <div class="dd-name" id="ddName">超级管理员</div>
+            <div class="dd-item danger" onclick="logoutAdmin()"><i class="mi mi-logout"></i>退出登录</div>
+            <div id="roleSwitchBlock" style="display:none">
+              <div class="dd-divider"></div>
+              <div class="dd-sub">切换角色视角</div>
+              <div class="dd-item role-item" data-role="super" onclick="switchRole('super')">超级管理员<span class="role-dot"></span></div>
+              <div class="dd-item role-item" data-role="editor" onclick="switchRole('editor')">内容编辑<span class="role-dot"></span></div>
+              <div class="dd-item role-item" data-role="teacher" onclick="switchRole('teacher')">教务<span class="role-dot"></span></div>
+              <div class="dd-item role-item" data-role="tutor" onclick="switchRole('tutor')">授课老师<span class="role-dot"></span></div>
+              <div class="dd-item role-item" data-role="finance" onclick="switchRole('finance')">财务审核<span class="role-dot"></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ============ 数据概览（科技大屏） ============ -->
+    <section class="page" id="page-dashboard">
+      <div class="ds-screen">
+        <!-- 顶部核心 KPI 发光条 -->
+        <div class="ds-kpis" id="dsKpis"></div>
+
+        <!-- 第一行：环形指标区 + 学生构成 -->
+        <div class="ds-row ds-row-3">
+          <div class="ds-card">
+            <div class="ds-card-t">学习正确率</div>
+            <div class="ds-rings" id="dsRings"></div>
+          </div>
+          <div class="ds-card">
+            <div class="ds-card-t">用户留存</div>
+            <div class="ds-rings" id="dsRetention"></div>
+          </div>
+          <div class="ds-card">
+            <div class="ds-card-t">学生构成</div>
+            <div class="ds-donut-wrap">
+              <div class="ds-donut" id="dsDonut"></div>
+              <div class="ds-legend" id="dsDonutLegend"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 第二行：双折线趋势 -->
+        <div class="ds-row ds-row-2">
+          <div class="ds-card">
+            <div class="ds-card-t">近 7 日正确率趋势 <span class="ds-unit">%</span></div>
+            <div class="ds-line" id="dsLineAcc"></div>
+          </div>
+          <div class="ds-card">
+            <div class="ds-card-t">近 7 日活跃学生趋势 <span class="ds-unit">人</span></div>
+            <div class="ds-line" id="dsLineActive"></div>
+          </div>
+        </div>
+
+        <!-- 第三行：学习行为指标墙 + 关卡漏斗 -->
+        <div class="ds-row ds-row-2">
+          <div class="ds-card">
+            <div class="ds-card-t">学习行为</div>
+            <div class="ds-metrics" id="dsBehavior"></div>
+          </div>
+          <div class="ds-card">
+            <div class="ds-card-t">关卡完成漏斗</div>
+            <div class="ds-funnel" id="dsFunnel"></div>
+          </div>
+        </div>
+
+        <!-- 第四行：重点关注学生（各占整行，左规则 + 右名单） -->
+        <div class="ds-row">
+          <div class="ds-card ds-alert warn">
+            <div class="ds-card-t"><i class="ds-pulse red"></i>即将流失的学生 <span class="ds-big" id="churnNum"></span></div>
+            <div class="alert-body">
+              <ul class="ds-rule" id="churnRules"></ul>
+              <div class="alert-list" id="churnList"></div>
+            </div>
+            <div class="panel-actions">
+              <button class="btn ghost" onclick="mockExport('流失名单')">导出名单</button>
+              <button class="btn primary" onclick="mockRemind('流失学生')">发送学习提醒</button>
+            </div>
+          </div>
+        </div>
+        <div class="ds-row">
+          <div class="ds-card ds-alert good">
+            <div class="ds-card-t"><i class="ds-pulse teal"></i>高活跃学生 <span class="ds-big" id="highNum"></span></div>
+            <div class="alert-body">
+              <ul class="ds-rule" id="highRules"></ul>
+              <div class="alert-list" id="highList"></div>
+            </div>
+            <div class="panel-actions">
+              <button class="btn ghost" onclick="mockExport('高活跃名单')">导出名单</button>
+              <button class="btn primary" onclick="mockRemind('高活跃学生')">发送学习提醒</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 题库管理 ============ -->
+    <section class="page hidden" id="page-questions">
+      <!-- 用途分组：闯关题库 / AI纠音题库 物理分开 -->
+      <div class="q-group-tabs">
+        <span class="q-gtab on" data-group="quiz" onclick="switchQGroup(this)"><i class="qg-ic ic-quiz"></i>闯关题库<i class="q-count" id="qcQuiz"></i></span>
+        <span class="q-gtab" data-group="speaking" onclick="switchQGroup(this)"><i class="qg-ic ic-spk"></i>AI纠音题库<i class="q-count" id="qcSpk"></i></span>
+      </div>
+      <div class="toolbar">
+        <div class="filters">
+          <select id="qTypeFilter">
+            <option value="">全部题型</option>
+          </select>
+          <select id="qStatusFilter">
+            <option value="">全部状态</option>
+            <option value="published">已发布</option>
+            <option value="draft">草稿</option>
+          </select>
+          <input type="text" id="qSearch" placeholder="搜索题干 / 粤拼 / ID">
+        </div>
+        <div class="actions">
+          <button class="btn ghost" onclick="ttsBatch()"><i class="bi bi-audio"></i>一键生成全部音频</button>
+          <button class="btn ghost" onclick="openImportModal()"><i class="bi bi-import"></i>Excel 批量导入</button>
+          <button class="btn primary" onclick="openQuestionModal()">＋ 单题录入</button>
+        </div>
+      </div>
+      <div class="panel table-panel">
+        <table id="qTable">
+          <thead>
+            <tr>
+              <th>ID</th><th>题型</th><th>题干</th><th>粤拼</th><th>音频</th>
+              <th>版本</th><th>状态</th><th>被关卡引用</th><th>操作</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ 题目统计 ============ -->
+    <section class="page hidden" id="page-qstats">
+      <div class="toolbar">
+        <div class="filters">
+          <select id="sTypeFilter">
+            <option value="">全部题型</option>
+            <option value="pic_choice">图片选择题</option>
+            <option value="choice">文字选择题</option>
+            <option value="sentence_order">选词组句</option>
+            <option value="speaking">AI纠音题</option>
+          </select>
+          <select id="sSort">
+            <option value="rate_asc">正确率 从低到高</option>
+            <option value="rate_desc">正确率 从高到低</option>
+            <option value="skip_desc">跳过率 从高到低</option>
+            <option value="disc_desc">区分度 从高到低</option>
+          </select>
+        </div>
+        <div class="actions">
+          <button class="btn ghost" onclick="mockExport('题目统计报表')">导出报表</button>
+        </div>
+      </div>
+      <div class="panel table-panel wide-table">
+        <table id="sTable">
+          <thead>
+            <tr>
+              <th>ID</th><th>题干</th><th>作答人数</th><th>作答次数</th><th>正确率</th>
+              <th>首次正确率</th><th>复习正确率</th><th>平均答题时间</th><th>跳过率</th>
+              <th>重复错误率</th><th>选项分布</th><th>区分度</th>
+              <th>音频失败率</th><th>图片失败率</th><th>语音识别失败率</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ 关卡组装 ============ -->
+    <section class="page hidden" id="page-levels">
+      <div class="toolbar">
+        <span class="hint">题目与关卡为多对多关系，同一道题可被多个关卡引用；修改题目内容，所有引用关卡自动同步</span>
+        <div class="actions">
+          <button class="btn primary" onclick="openLevelModal()">＋ 新建关卡</button>
+        </div>
+      </div>
+      <div class="level-grid" id="levelGrid"></div>
+    </section>
+
+    <!-- ============ 录播课管理 ============ -->
+    <section class="page hidden" id="page-courses">
+      <div class="toolbar">
+        <span class="hint">视频上传至对象存储 + CDN 分发；防盗链 / 倍速播放 / 断点续播由播放端支持</span>
+        <div class="actions">
+          <button class="btn ghost" onclick="openCatModal()" title="管理顶部滑动栏的课程分类">分类管理</button>
+          <button class="btn primary" onclick="openCourseModal()">＋ 上传课程</button>
+        </div>
+      </div>
+      <!-- 会员定价 + 订单概览 -->
+      <div class="panel" style="padding:16px;margin-bottom:14px">
+        <h4 class="usage-h" style="margin-top:0">会员与订单（付费录播）</h4>
+        <div class="sch-form" style="align-items:center;flex-wrap:wrap">
+          <label class="hint">会员开关</label>
+          <label class="switch"><input type="checkbox" id="mbEnabled"><span class="slider"></span></label>
+          <label class="hint">月卡</label><input type="number" id="mbMonth" min="0" step="0.01" style="width:90px" placeholder="元">
+          <label class="hint">年卡</label><input type="number" id="mbYear" min="0" step="0.01" style="width:90px" placeholder="元">
+          <button class="btn primary" onclick="saveMembership()">保存会员定价</button>
+          <span style="flex:1"></span>
+          <span class="hint" id="orderStat">订单：—</span>
+          <button class="btn ghost" onclick="loadOrders()">查看订单</button>
+        </div>
+        <div class="panel table-panel" id="orderPanel" style="display:none;margin-top:12px">
+          <table><thead><tr><th>下单时间</th><th>学号</th><th>昵称</th><th>类型</th><th>标题</th><th>金额</th><th>状态</th></tr></thead>
+          <tbody id="orderRows"></tbody></table>
+        </div>
+      </div>
+      <div class="course-grid" id="courseGrid"></div>
+    </section>
+
+    <!-- ============ 约课管理 ============ -->
+    <section class="page hidden" id="page-booking">
+      <div class="bk-tabs">
+        <span class="bk-tab on" data-bk="bookings" onclick="switchBkTab(this)">约课列表</span>
+        <span class="bk-tab" data-bk="schedule" onclick="switchBkTab(this)">排班</span>
+        <span class="bk-tab" data-bk="teachers" onclick="switchBkTab(this)">教师</span>
+        <span class="bk-tab" data-bk="packs" onclick="switchBkTab(this)">课时包</span>
+        <span class="bk-tab" data-bk="homework" onclick="switchBkTab(this)">课后作业</span>
+        <span class="bk-tab" data-bk="mats" onclick="switchBkTab(this)">教材</span>
+      </div>
+
+      <!-- 约课列表 -->
+      <div class="bk-pane" id="bk-bookings">
+        <div class="toolbar">
+          <span class="hint">课程结束后系统自动确认完成并消课；也可手动操作</span>
+          <div class="actions">
+            <button class="btn ghost" onclick="openOfflineModal()">＋ 补录系统外课程</button>
+            <button class="btn ghost" onclick="loadBookings()"><i class="bi bi-refresh"></i>刷新</button>
+          </div>
+        </div>
+        <div class="panel table-panel">
+          <table>
+            <thead><tr><th>日期</th><th>时间</th><th>学生</th><th>老师</th><th>状态</th><th>消课</th><th>操作</th></tr></thead>
+            <tbody id="bookingRows"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 排班 -->
+      <div class="bk-pane hidden" id="bk-schedule">
+        <div class="panel" style="padding:16px;margin-bottom:14px">
+          <h4 class="usage-h" style="margin-top:0">约课设置</h4>
+          <div class="sch-form" style="align-items:center">
+            <span class="hint">学生可预约「未来</span>
+            <input id="bkAheadDays" type="number" min="1" max="90" style="width:80px" placeholder="天数">
+            <span class="hint">天」内的时段（超出范围的时段学生看不到、约不了）</span>
+            <button class="btn primary" onclick="saveBookingConfig()">保存设置</button>
+          </div>
+        </div>
+        <div class="panel" style="padding:16px;margin-bottom:14px">
+          <h4 class="usage-h" style="margin-top:0">批量排班（学生可预约设定天数内的时段）</h4>
+          <div class="sch-form">
+            <select id="schTeacher"></select>
+            <input type="date" id="schDate">
+            <div class="stu-pick" style="flex:1" onclick="openSlotPicker()"><span class="stu-pick-txt" id="schSlots_txt">选择时段（可多选整点课）</span><i class="stu-pick-ic">▾</i></div>
+            <input type="hidden" id="schSlots">
+            <button class="btn primary" onclick="addSchedule()">添加排班</button>
+          </div>
+          <div class="hint" style="margin-top:8px">同老师时间重叠会自动拦截；已被预约的时段不可删除</div>
+        </div>
+        <div class="panel table-panel">
+          <table>
+            <thead><tr><th>日期</th><th>时间</th><th>老师</th><th>状态</th><th>操作</th></tr></thead>
+            <tbody id="scheduleRows"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 教师 -->
+      <div class="bk-pane hidden" id="bk-teachers">
+        <div class="panel" style="padding:16px;margin-bottom:14px">
+          <h4 class="usage-h" style="margin-top:0">新增教师（腾讯会议个人会议室链接录入一次，永久有效）</h4>
+          <div class="sch-form">
+            <input id="tchName" placeholder="老师姓名" style="width:120px">
+            <input id="tchPmiUrl" placeholder="个人会议链接 https://meeting.tencent.com/p/xxxx" style="flex:1">
+            <input id="tchPmiCode" placeholder="会议号 xxx xxx xxxx" style="width:150px">
+            <button class="btn primary" onclick="addTeacher()">添加</button>
+          </div>
+        </div>
+        <div class="panel table-panel">
+          <table>
+            <thead><tr><th>姓名</th><th>个人会议链接</th><th>会议号</th><th>状态</th><th>操作</th></tr></thead>
+            <tbody id="teacherRows"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 课时包 -->
+      <div class="bk-pane hidden" id="bk-packs">
+        <div class="panel" style="padding:16px;margin-bottom:14px">
+          <h4 class="usage-h" style="margin-top:0">开通课时包 / 调整课时</h4>
+          <div class="sch-form">
+            <div class="stu-pick" style="width:180px" onclick="openStudentPicker('pkStudentNo', false)"><span class="stu-pick-txt" id="pkStudentNo_txt">选择学生</span><i class="stu-pick-ic">▾</i></div>
+            <input type="hidden" id="pkStudentNo">
+            <input id="pkTotal" type="number" placeholder="课时数" style="width:90px">
+            <input id="pkMonths" type="number" placeholder="有效期(月)" style="width:100px" value="12">
+            <input id="pkNote" placeholder="备注（如：20 节体验包）" style="flex:1">
+            <button class="btn primary" onclick="grantPack()">开通</button>
+            <button class="btn ghost" onclick="adjustPack(1)">+1 节</button>
+            <button class="btn ghost" onclick="adjustPack(-1)">-1 节</button>
+          </div>
+        </div>
+        <div class="panel table-panel">
+          <table>
+            <thead><tr><th>学号</th><th>手机号</th><th>总课时</th><th>已用</th><th>剩余</th><th>最近到期</th><th>操作</th></tr></thead>
+            <tbody id="packRows"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 课后作业 -->
+      <div class="bk-pane hidden" id="bk-homework">
+        <div class="panel" style="padding:16px;margin-bottom:14px">
+          <h4 class="usage-h" style="margin-top:0">布置作业</h4>
+          <div class="sch-form" style="margin-bottom:8px">
+            <input id="hwTitle" placeholder="作业标题（如：第3课 跟读练习）" style="flex:1">
+            <select id="hwTargetType" onchange="hwTargetSwitch()">
+              <option value="students">按学号</option>
+              <option value="class">按分类</option>
+            </select>
+            <div class="stu-pick" style="width:240px" id="hwStudentNos_pick" onclick="openStudentPicker('hwStudentNos', true)"><span class="stu-pick-txt" id="hwStudentNos_txt">选择学生（可多选）</span><i class="stu-pick-ic">▾</i></div>
+            <input type="hidden" id="hwStudentNos">
+            <select id="hwClassTag" class="hidden" style="width:100px">
+              <option value="A">A 类</option><option value="B">B 类</option><option value="C">C 类</option>
+            </select>
+            <select id="hwDays" style="width:120px">
+              <option value="3">3 天内完成</option>
+              <option value="7" selected>7 天内完成</option>
+              <option value="14">14 天内完成</option>
+              <option value="0">不限期</option>
+            </select>
+            <label style="font-size:12px;color:#6b7684"><input type="checkbox" id="hwRemind" checked> 每日提醒未完成</label>
+          </div>
+          <div class="sch-form">
+            <textarea id="hwContent" placeholder="作业内容（要求、跟读文本等）" style="flex:1;min-height:60px;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px"></textarea>
+            <button class="btn primary" onclick="publishHomework()">发布作业</button>
+          </div>
+        </div>
+        <div class="panel table-panel">
+          <table>
+            <thead><tr><th>标题</th><th>对象</th><th>截止</th><th>提交/批改</th><th>发布人</th><th>操作</th></tr></thead>
+            <tbody id="hwRows"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 教材 -->
+      <div class="bk-pane hidden" id="bk-mats">
+        <div class="panel" style="padding:16px;margin-bottom:14px">
+          <h4 class="usage-h" style="margin-top:0">上传教材 PDF（自动逐页转图；学到解锁章后下一册自动开放）</h4>
+          <div class="sch-form" style="margin-bottom:8px">
+            <input id="matName" placeholder="教材名称（如：粤语入门 第一册）" style="flex:1">
+            <select id="matCategory" style="width:90px"><option value="A">A 类</option><option value="B">B 类</option><option value="C">C 类</option></select>
+            <input id="matOrder" type="number" placeholder="第几册" style="width:90px" value="1">
+            <input id="matChapters" type="number" placeholder="共几章" style="width:90px">
+            <input id="matUnlock" type="number" placeholder="学到第几章解锁下册" style="width:160px">
+            <input type="file" id="matPdf" accept="application/pdf" hidden>
+            <button class="btn primary" onclick="document.getElementById('matPdf').click()"><i class="bi bi-upload"></i>选择 PDF 上传</button>
+          </div>
+          <div class="sch-form">
+            <span class="hint" style="flex:1">学生进度（驱动自动解锁）：</span>
+            <div class="stu-pick" style="width:180px" onclick="openStudentPicker('mpStudentNo', false)"><span class="stu-pick-txt" id="mpStudentNo_txt">选择学生</span><i class="stu-pick-ic">▾</i></div>
+            <input type="hidden" id="mpStudentNo">
+            <input id="mpBook" type="number" placeholder="第几册" style="width:90px">
+            <input id="mpChapter" type="number" placeholder="第几章" style="width:90px">
+            <button class="btn ghost" onclick="setMatProg()">更新进度</button>
+          </div>
+        </div>
+        <div class="panel table-panel">
+          <table>
+            <thead><tr><th>教材</th><th>分类</th><th>册序</th><th>章节</th><th>解锁规则</th><th>页数</th><th>操作</th></tr></thead>
+            <tbody id="matRows"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 用量监控 ============ -->
+    <section class="page hidden" id="page-usage">
+      <div class="toolbar">
+        <span class="hint">本地统计实时更新；云端账单/流量来自腾讯云官方接口</span>
+        <div class="actions">
+          <button class="btn ghost" onclick="loadUsage()"><i class="bi bi-refresh"></i>刷新</button>
+        </div>
+      </div>
+
+      <h4 class="usage-h">资源配额（总量 / 已用）</h4>
+      <div class="quota-list" id="usageQuota"></div>
+
+      <h4 class="usage-h">业务用量（自有统计，实时精确）</h4>
+      <div class="kpi-grid" id="usageLocal"></div>
+
+      <h4 class="usage-h">腾讯云本月消费（官方账单，T+1 更新：新购/当日消费次日凌晨入账）</h4>
+      <div class="card usage-card">
+        <table class="usage-table" id="usageBillTable">
+          <thead><tr><th>产品</th><th>本月实际消费（元）</th><th>占比</th></tr></thead>
+          <tbody id="usageBillBody"><tr><td colspan="3" class="hint">加载中…</td></tr></tbody>
+        </table>
+        <div class="hint" id="usageBillErr"></div>
+      </div>
+
+      <h4 class="usage-h">CDN 流量（res.fla.wang，本月）</h4>
+      <div class="kpi-grid" id="usageCdn"></div>
+
+      <h4 class="usage-h">数据备份监控</h4>
+      <div class="toolbar" style="margin-bottom:10px">
+        <span class="hint" id="backupSummary">加载中…</span>
+        <div class="actions">
+          <button class="btn primary" id="backupBtn" onclick="doBackup()">立即备份</button>
+          <button class="btn ghost" onclick="loadBackup()"><i class="bi bi-refresh"></i>刷新</button>
+        </div>
+      </div>
+      <div class="kpi-grid" id="backupKpi"></div>
+      <div class="card usage-card" style="margin-top:12px">
+        <table class="usage-table">
+          <thead><tr><th>备份文件</th><th>大小</th><th>类型</th><th>时间</th></tr></thead>
+          <tbody id="backupBody"><tr><td colspan="4" class="hint">加载中…</td></tr></tbody>
+        </table>
+      </div>
+
+      <div class="hint usage-foot">
+        计费小贴士：TTS 走 800 万字符免费资源包；ASR 一句话识别每月有免费额度，超出约 ¥0.0035/次；
+        CDN 走已购流量包抵扣。建议在腾讯云费用中心开启「余额预警 + 消费封顶」双保险。
+      </div>
+    </section>
+
+    <!-- ============ 学生管理 ============ -->
+    <section class="page hidden" id="page-students">
+      <div class="toolbar">
+        <div class="search-box">
+          <input type="text" id="stuSearch" placeholder="搜索学生设备号" oninput="renderStudents()">
+        </div>
+        <div class="actions">
+          <button class="btn ghost" onclick="toggleAttendance()" id="attToggleBtn">出勤考核</button>
+          <button class="btn ghost" onclick="loadStudents()"><i class="bi bi-refresh"></i>刷新</button>
+        </div>
+      </div>
+      <!-- 出勤考核表（默认隐藏） -->
+      <div class="card usage-card" id="attendPanel" style="display:none;margin-bottom:14px">
+        <table class="usage-table">
+          <thead><tr><th>学号</th><th>昵称</th><th>出勤率</th><th>出勤</th><th>请假</th><th>缺课</th><th>待点名</th><th>打卡天数</th><th>连续打卡</th></tr></thead>
+          <tbody id="attendBody"><tr><td colspan="9" class="hint">加载中…</td></tr></tbody>
+        </table>
+      </div>
+      <div class="card usage-card">
+        <table class="usage-table">
+          <thead><tr>
+            <th>学生ID / 身份</th><th>昵称</th><th>手机号</th><th>闯关 / 通过</th><th>累计答题</th><th>首次正确率</th>
+            <th>纠音次数</th><th>纠音均分</th><th>学习时长</th><th>最近活跃</th>
+          </tr></thead>
+          <tbody id="stuBody"><tr><td colspan="10" class="hint">加载中…</td></tr></tbody>
+        </table>
+      </div>
+      <div class="hint usage-foot">学生以匿名设备号标识（未接入微信登录前）；数据来自作答结算与学习埋点，实时聚合。</div>
+    </section>
+
+    <!-- ============ 系统设置 ============ -->
+    <section class="page hidden" id="page-settings">
+      <div class="card usage-card settings-card">
+        <h4 class="usage-h" style="margin-top:0">修改我的登录密码</h4>
+        <div class="form-row">
+          <label>当前密码</label>
+          <input type="password" id="pwdOld" placeholder="输入当前密码">
+        </div>
+        <div class="form-row">
+          <label>新密码</label>
+          <input type="password" id="pwdNew" placeholder="至少 8 位，建议字母+数字+符号">
+        </div>
+        <div class="form-row">
+          <label>确认新密码</label>
+          <input type="password" id="pwdNew2" placeholder="再输入一次新密码">
+        </div>
+        <button class="btn primary" onclick="changePassword()">保存新密码</button>
+        <p class="hint" style="margin-top:12px">修改成功后本账号会话失效，需用新密码重新登录。</p>
+      </div>
+
+      <!-- 仅超级管理员可见 -->
+      <div id="superOnlyBlocks">
+        <h4 class="usage-h">后台外观 · Logo 与名称（超级管理员）</h4>
+        <div class="card usage-card">
+          <div class="brand-form">
+            <div class="brand-logo-box">
+              <div class="brand-preview" id="brandPreview">粤</div>
+              <input type="file" id="brandLogoFile" accept="image/png,image/jpeg,image/webp,image/svg+xml" hidden>
+              <button class="btn ghost sm" onclick="document.getElementById('brandLogoFile').click()">上传 Logo</button>
+              <button class="btn ghost sm" onclick="resetBrandLogo()" id="brandResetBtn" style="display:none">恢复默认</button>
+            </div>
+            <div class="brand-fields">
+              <label class="brand-lbl">系统名称</label>
+              <input type="text" id="brandTitle" maxlength="20" placeholder="粤语学习后台">
+              <label class="brand-lbl">副标题</label>
+              <input type="text" id="brandSubtitle" maxlength="30" placeholder="教务管理平台">
+              <button class="btn primary sm" onclick="saveBranding()" style="margin-top:10px">保存外观</button>
+            </div>
+          </div>
+          <span class="hint" style="display:block;margin-top:10px">建议尺寸 <b>正方形 128×128 px</b>（或 256×256 更清晰），PNG 透明底最佳；也支持 SVG / JPG。文件 &lt; 500KB。上传后侧边栏与登录页实时更新。</span>
+        </div>
+
+        <h4 class="usage-h">用户协议 / 隐私政策链接（超级管理员）</h4>
+        <div class="card usage-card">
+          <div class="legal-form">
+            <label class="brand-lbl">用户协议链接（https://）</label>
+            <input type="text" id="uaUrl" placeholder="https://yy.fla.wang/legal/ua.html">
+            <label class="brand-lbl">隐私政策链接（https://）</label>
+            <input type="text" id="privacyUrl" placeholder="https://yy.fla.wang/legal/privacy.html">
+            <button class="btn primary sm" onclick="saveLegal()" style="margin-top:10px">保存链接</button>
+          </div>
+          <span class="hint" style="display:block;margin-top:10px">小程序登录页的《用户协议》《隐私政策》点击后打开这两个链接。<b>必须是 https 且与后台同域名</b>（如 yy.fla.wang），否则小程序 web-view 打不开。留空则使用小程序内置的基础文本版本。</span>
+        </div>
+
+        <h4 class="usage-h">小程序版本开关（超级管理员）</h4>
+        <div class="card usage-card">
+          <div class="sch-form">
+            <label style="font-size:13px;color:#4a5361;display:flex;align-items:center;gap:8px">
+              <input type="checkbox" id="cfgVersionSwitch" onchange="saveAppConfig()">
+              开启「学员版 / 用户版」双版本选择
+            </label>
+            <span class="hint" style="flex:1">开启后：小程序首页弹出版本二选一；用户版仅保留 AI 纠音、闯关、录播课等自学功能，约课/教材/作业等学员服务自动隐藏。关闭时全员默认学员版（当前状态）。</span>
+          </div>
+        </div>
+
+        <h4 class="usage-h">账号与角色管理（超级管理员）</h4>
+        <div class="card usage-card">
+          <div class="acct-form">
+            <input type="text" id="accUser" placeholder="用户名（3-20位字母数字）">
+            <input type="text" id="accName" placeholder="姓名/昵称">
+            <select id="accRole">
+              <option value="editor">内容编辑（题库/关卡/课程）</option>
+              <option value="teacher">教务（排全体老师课/学生/作业）</option>
+              <option value="tutor">授课老师（仅教师工作台·看自己的课）</option>
+              <option value="finance">财务审核（用量账单，只读）</option>
+              <option value="super">超级管理员（全部模块）</option>
+            </select>
+            <input type="password" id="accPwd" placeholder="初始密码（至少8位）">
+            <button class="btn primary" onclick="createAccount()">＋ 新增账号</button>
+          </div>
+          <table class="usage-table" style="margin-top:14px">
+            <thead><tr><th>用户名</th><th>姓名</th><th>角色</th><th>创建时间</th><th>操作</th></tr></thead>
+            <tbody id="acctBody"><tr><td colspan="5" class="hint">加载中…</td></tr></tbody>
+          </table>
+        </div>
+
+        <h4 class="usage-h">操作日志（工作留痕，可追溯）</h4>
+        <div class="card usage-card">
+          <div class="sch-form" style="margin-bottom:12px">
+            <select id="adUser"><option value="">全部操作人</option></select>
+            <select id="adModule">
+              <option value="">全部模块</option>
+              <option value="questions">题库</option>
+              <option value="levels">关卡</option>
+              <option value="courses">课程</option>
+              <option value="tts">语音合成</option>
+              <option value="material">教材/批注</option>
+              <option value="homework">课后作业</option>
+              <option value="schedule">排班</option>
+              <option value="bookings">约课</option>
+              <option value="packs">课时包</option>
+              <option value="teachers">教师</option>
+              <option value="students">学生</option>
+              <option value="accounts">账号管理</option>
+              <option value="password">密码</option>
+              <option value="upload">资源上传</option>
+              <option value="vod">视频</option>
+            </select>
+            <input type="date" id="adDay">
+            <button class="btn ghost" onclick="loadAudit()"><i class="bi bi-refresh"></i>筛选</button>
+            <button class="btn ghost" onclick="clearAuditFilter()">重置</button>
+          </div>
+          <table class="usage-table">
+            <thead><tr><th>时间</th><th>操作者</th><th>角色</th><th>模块</th><th>操作</th><th>详情</th></tr></thead>
+            <tbody id="auditBody"><tr><td colspan="6" class="hint">加载中…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ============ 弹窗：单题录入 / 编辑 ============ -->
+<div class="modal-mask hidden" id="questionModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="qModalTitle">单题录入</h3>
+      <span class="modal-close" onclick="closeModal('questionModal')">✕</span>
+    </div>
+    <div class="modal-body">
+      <div class="version-tip hidden" id="versionTip">
+        该题已发布并产生作答数据，保存修改将创建 <b>新版本</b>；历史作答记录继续绑定旧版本，新关卡/新作答使用新版本。
+      </div>
+      <div class="form-row">
+        <label>题型</label>
+        <select id="fType" onchange="renderTypeFields()">
+          <option value="pic_choice">图片选择题（听音选图 2×2）</option>
+          <option value="choice">文字选择题（翻译/辨析/汉字↔粤拼/听音选）</option>
+          <option value="sentence_order">选词组句</option>
+          <option value="speaking">AI纠音题</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>题干 / 粤语句子</label>
+        <input type="text" id="fText" placeholder="如：唔该，埋单！">
+      </div>
+      <div class="form-row">
+        <label>粤拼</label>
+        <input type="text" id="fJyut" placeholder="如：m4 goi1, maai4 daan1">
+      </div>
+      <!-- 按题型切换的字段模板 -->
+      <div id="typeFields"></div>
+      <div class="form-row">
+        <label>标准音频</label>
+        <div class="upload-row">
+          <button class="btn ghost sm" onclick="mockTts()"><i class="bi bi-audio"></i>调用 TTS 生成</button>
+          <button class="btn ghost sm" onclick="mockUpload('MP3')"><i class="bi bi-upload"></i>上传 MP3</button>
+          <span class="upload-name" id="fAudioName">未生成</span>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>状态</label>
+        <select id="fStatus">
+          <option value="draft">草稿</option>
+          <option value="published">发布</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" onclick="closeModal('questionModal')">取消</button>
+      <button class="btn primary" onclick="saveQuestion()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 弹窗：Excel 导入 ============ -->
+<!-- 作业批改弹窗：学生图片 + 红笔手写 + 打分评语 -->
+<div class="modal-mask hidden" id="gradeModal">
+  <div class="modal" style="max-width:860px">
+    <div class="modal-head">
+      <h3 id="gradeTitle">批改作业</h3>
+      <span class="modal-close" onclick="closeModal('gradeModal')">✕</span>
+    </div>
+    <div style="display:flex;gap:14px;flex-wrap:wrap">
+      <div style="flex:1;min-width:420px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          <button class="btn ghost sm" onclick="gradePrevImg()">◀ 上一张</button>
+          <span id="gradeImgInd" style="font-size:12px;color:#6b7684">1 / 1</span>
+          <button class="btn ghost sm" onclick="gradeNextImg()">下一张 ▶</button>
+          <button class="btn ghost sm" onclick="gradeClearInk()">清除本张笔迹</button>
+          <span style="font-size:11px;color:#8a94a3">在图上直接用鼠标/触控笔画圈写字</span>
+        </div>
+        <div id="gradeCanvasWrap" style="position:relative;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:#f7f8fa;max-height:520px;overflow-y:auto">
+          <img id="gradeImg" style="display:block;width:100%;user-select:none" draggable="false">
+          <canvas id="gradeInk" style="position:absolute;left:0;top:0;touch-action:none"></canvas>
+        </div>
+        <div id="gradeText" style="font-size:13px;color:#4a5361;margin-top:8px;white-space:pre-wrap"></div>
+      </div>
+      <div style="width:220px">
+        <div class="form-row"><label>分数（0-100）</label><input id="gradeScore" type="number" min="0" max="100" placeholder="90"></div>
+        <div class="form-row"><label>评语</label><textarea id="gradeComment" style="width:100%;min-height:120px;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px" placeholder="发音准确，声调注意第2和第5个字…"></textarea></div>
+        <button class="btn primary" style="width:100%" onclick="saveGrade()">保存批改</button>
+        <div class="hint" style="margin-top:8px">保存后学生端立即可见批改图与评语</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-mask hidden" id="importModal">
+  <div class="modal narrow">
+    <div class="modal-head">
+      <h3>Excel 批量导入</h3>
+      <span class="modal-close" onclick="closeModal('importModal')">✕</span>
+    </div>
+    <div class="modal-body">
+      <p class="import-tip">按模板填写后一次性导入几百题。支持题型：choice / pic_choice / sentence_order / speaking。</p>
+      <button class="btn ghost" onclick="downloadTemplate()"><i class="bi bi-download"></i>下载 Excel 模板</button>
+      <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+        <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" hidden>
+        <span id="dropText">点击选择或拖入 Excel 文件</span>
+      </div>
+      <div class="hint" id="importPreview"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" onclick="closeModal('importModal')">取消</button>
+      <button class="btn primary" onclick="doImport()">开始导入</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 弹窗：新建 / 编辑关卡 ============ -->
+<div class="modal-mask hidden" id="levelModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="lModalTitle">新建关卡</h3>
+      <span class="modal-close" onclick="closeModal('levelModal')">✕</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <label>关卡名称</label>
+        <input type="text" id="lName" placeholder='如：第1关：茶餐厅点单'>
+      </div>
+      <div class="form-row">
+        <label>关卡描述</label>
+        <input type="text" id="lDesc" placeholder="一句话描述本关内容">
+      </div>
+      <div class="form-row inline">
+        <label>通过门槛</label>
+        <span>做对 <input type="number" id="lThreshold" value="8" min="1" style="width:60px"> 题以上通关（建议 10 题/关）</span>
+      </div>
+      <div class="form-row inline">
+        <label>题目来源</label>
+        <label class="radio"><input type="radio" name="lSource" value="manual" checked onchange="toggleLevelSource()"> 从题库勾选</label>
+        <label class="radio"><input type="radio" name="lSource" value="auto" onchange="toggleLevelSource()"> 按规则自动抽取</label>
+      </div>
+      <div id="lManualBox">
+        <div class="form-row">
+          <label>勾选题目 <span class="picked-count" id="pickedCount">已选 0 题</span></label>
+          <input type="text" id="lQSearch" placeholder="搜索题目…" oninput="renderLevelPicker()">
+          <div class="picker" id="lPicker"></div>
+        </div>
+      </div>
+      <div id="lAutoBox" class="hidden">
+        <div class="form-row inline">
+          <label>抽取规则</label>
+          <span>
+            从 <select id="lAutoType"><option value="">全部题型</option><option value="pic_choice">图片选择题</option><option value="choice">文字选择题</option><option value="sentence_order">选词组句</option><option value="speaking">AI纠音题</option></select>
+            随机抽 <input type="number" id="lAutoCount" value="10" min="1" style="width:60px"> 题
+          </span>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>状态</label>
+        <select id="lStatus">
+          <option value="draft">草稿</option>
+          <option value="online">上线</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" onclick="closeModal('levelModal')">取消</button>
+      <button class="btn primary" onclick="saveLevel()">保存关卡</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 弹窗：分类管理 ============ -->
+<div class="modal-mask hidden" id="catModal">
+  <div class="modal narrow">
+    <div class="modal-head">
+      <h3>课程分类管理</h3>
+      <span class="modal-close" onclick="closeModal('catModal')">✕</span>
+    </div>
+    <div class="modal-body">
+      <div class="hint" style="margin-bottom:12px">这里的分类用于小程序录播课页顶部的滑动筛选栏，学生按此筛选课程。</div>
+      <div id="catList" class="cat-mgr-list"></div>
+      <div class="sch-form" style="margin-top:12px">
+        <input type="text" id="catNew" placeholder="输入新分类名（如：进阶口语）" style="flex:1" maxlength="12">
+        <button class="btn ghost" onclick="addCat()">＋ 添加</button>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" onclick="closeModal('catModal')">取消</button>
+      <button class="btn primary" onclick="saveCats()">保存分类</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 弹窗：上传课程 ============ -->
+<div class="modal-mask hidden" id="courseModal">
+  <div class="modal narrow">
+    <div class="modal-head">
+      <h3 id="cModalTitle">上传课程</h3>
+      <span class="modal-close" onclick="closeModal('courseModal')">✕</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-row"><label>课程名称</label><input type="text" id="cName" placeholder="如：粤语发音入门"></div>
+      <div class="form-row"><label>课程简介</label><input type="text" id="cIntro" placeholder="一句话简介"></div>
+      <div class="form-row">
+        <label>课程分类</label>
+        <select id="cCategory" onchange="onCategoryChange()"></select>
+      </div>
+      <div class="form-row">
+        <label>封面图</label>
+        <div class="upload-row">
+          <input type="file" id="cCoverFile" accept="image/*" hidden>
+          <button class="btn ghost sm" onclick="document.getElementById('cCoverFile').click()"><i class="bi bi-camera"></i>上传封面</button>
+          <img id="cCoverPrev" class="img-prev hidden" style="width:96px;height:54px;object-fit:cover;border-radius:6px">
+          <span class="upload-name" id="cCoverName">未上传（将使用配色渐变封面）</span>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>视频文件（MP4）</label>
+        <div class="upload-row">
+          <input type="file" id="cVideoFile" accept="video/*" hidden>
+          <button class="btn ghost sm" onclick="document.getElementById('cVideoFile').click()"><i class="bi bi-upload"></i>选择视频上传</button>
+          <span class="upload-name" id="cVideoName">未选择（上传至腾讯云点播，自动转码分发）</span>
+        </div>
+        <div class="upload-progress hidden" id="cVideoProg"><div class="upload-bar" id="cVideoBar"></div></div>
+      </div>
+      <div class="form-row inline">
+        <label>免费试看</label>
+        <label class="radio"><input type="radio" name="cFree" value="1"> 是</label>
+        <label class="radio"><input type="radio" name="cFree" value="0" checked> 否</label>
+      </div>
+      <div class="form-row">
+        <label>课程价格</label>
+        <input type="number" id="cPrice" min="0" step="0.01" placeholder="元，0 或留空=免费" style="width:180px">
+        <span class="hint" style="margin-left:8px">元（0=免费，&gt;0 需购买或开会员看）</span>
+      </div>
+      <div class="form-row">
+        <label>上架状态</label>
+        <select id="cStatus"><option value="online">上架</option><option value="offline">下架</option></select>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" onclick="closeModal('courseModal')">取消</button>
+      <button class="btn primary" onclick="saveCourse()">保存课程</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast hidden" id="toast"></div>
+
+<!-- ============ 学生选择器（学号/姓名 搜索 + 网格多选，全局复用） ============ -->
+<div class="stu-modal-mask hidden" id="stuPickerMask">
+  <div class="stu-modal">
+    <div class="stu-modal-head">
+      <b id="stuPickerTitle">选择学生</b>
+      <button class="stu-modal-close" onclick="closeStudentPicker()">✕</button>
+    </div>
+    <input id="stuPickerSearch" class="stu-search" placeholder="搜索学号或姓名…" oninput="renderStuPicker()">
+    <div class="stu-grid" id="stuPickerGrid"></div>
+    <div class="stu-modal-foot">
+      <span class="stu-sel-count" id="stuPickerCount"></span>
+      <span style="flex:1"></span>
+      <button class="btn ghost" onclick="closeStudentPicker()">取消</button>
+      <button class="btn primary" id="stuPickerOk" onclick="confirmStudentPicker()">确定</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 时段选择器（一天整点时段，多选，排班用） ============ -->
+<div class="stu-modal-mask hidden" id="slotPickerMask">
+  <div class="stu-modal" style="max-width:520px">
+    <div class="stu-modal-head">
+      <b>选择上课时段（整点课，可多选）</b>
+      <button class="stu-modal-close" onclick="closeSlotPicker()">✕</button>
+    </div>
+    <div class="stu-grid" id="slotPickerGrid" style="grid-template-columns:repeat(auto-fill,minmax(110px,1fr))"></div>
+    <div class="stu-modal-foot">
+      <span class="stu-sel-count" id="slotPickerCount"></span>
+      <span style="flex:1"></span>
+      <button class="btn ghost" onclick="closeSlotPicker()">取消</button>
+      <button class="btn primary" onclick="confirmSlotPicker()">确定</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 补录系统外课程弹窗 ============ -->
+<div class="stu-modal-mask hidden" id="offlineMask">
+  <div class="stu-modal" style="max-width:440px">
+    <div class="stu-modal-head">
+      <b>补录系统外课程</b>
+      <button class="stu-modal-close" onclick="closeOffline()">✕</button>
+    </div>
+    <div style="padding:6px 20px 0"><div class="hint" style="line-height:1.6">把在<b>系统外/线下</b>已经上过的课登记进系统（如线下体验课、临时补课）。补录后会生成一条「已完成」记录并<b>消 1 课时</b>。</div></div>
+    <div style="padding:14px 20px 4px;display:flex;flex-direction:column;gap:12px">
+      <div class="of-row"><label>选择学生</label>
+        <div class="stu-pick" style="flex:1" onclick="openStudentPicker('ofStudentNo', false)"><span class="stu-pick-txt" id="ofStudentNo_txt">选择学生</span><i class="stu-pick-ic">▾</i></div>
+        <input type="hidden" id="ofStudentNo">
+      </div>
+      <div class="of-row"><label>老师</label><select id="ofTeacher" style="flex:1"></select></div>
+      <div class="of-row"><label>上课日期</label><input type="date" id="ofDate" style="flex:1"></div>
+      <div class="of-row"><label>备注</label><input id="ofNote" placeholder="如：线下体验课" style="flex:1"></div>
+    </div>
+    <div class="stu-modal-foot">
+      <span style="flex:1"></span>
+      <button class="btn ghost" onclick="closeOffline()">取消</button>
+      <button class="btn primary" onclick="submitOffline()">确认补录</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 登录遮罩（学院暖阳风） ============ -->
+<div class="login-mask" id="loginMask">
+  <!-- 漂浮粤语词卡 -->
+  <div class="edu-float">
+    <span class="ef-card ef1"><b>你好</b><i>nei5 hou2</i></span>
+    <span class="ef-card ef2"><b>多謝</b><i>do1 ze6</i></span>
+    <span class="ef-card ef3"><b>飲茶</b><i>jam2 caa4</i></span>
+    <span class="ef-card ef4"><b>叻仔</b><i>lek1 zai2</i></span>
+    <span class="ef-card ef5"><b>早晨</b><i>zou2 san4</i></span>
+  </div>
+  <div class="login-card">
+    <div class="login-logo" id="loginLogo">粤</div>
+    <h2 id="loginTitle">粤语学习 · 管理后台</h2>
+    <p class="login-sub">内容与教务中台 · 请登录后操作</p>
+    <input type="text" id="loginUser" placeholder="账号" autocomplete="username">
+    <input type="password" id="loginPass" placeholder="密码" autocomplete="current-password">
+    <button class="btn primary login-btn" id="loginBtn" onclick="doLogin()">登 录</button>
+  </div>
+</div>
+
+<script src="https://cdn-go.cn/cdn/vod-js-sdk-v6/latest/vod-js-sdk-v6.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="mock-data.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

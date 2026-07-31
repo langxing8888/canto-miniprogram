@@ -1,0 +1,11 @@
+<view class="audio-wrap" wx:if="{{src}}">
+  <view class="avatar mascot mascot-{{avatarIdx}} {{playing ? 'playing' : ''}}" bindtap="onTapAvatar">
+    <view class="sound-badge {{playing ? 'on' : ''}}">
+      <view class="icon icon-speaker-white badge-icon" />
+    </view>
+  </view>
+  <view class="turtle" wx:if="{{slowable}}" bindtap="onTapTurtle">
+    <view class="icon icon-turtle turtle-icon" />
+    <text class="turtle-label">慢速</text>
+  </view>
+</view>

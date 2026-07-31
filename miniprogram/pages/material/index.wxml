@@ -1,0 +1,21 @@
+<view class="wrap">
+  <view class="topbar">
+    <view class="pager">
+      <view class="pg-btn {{page <= 1 ? 'dis' : ''}}" bind:tap="onPrev">上一页</view>
+      <view class="pg-ind">{{page}} / {{pages}}</view>
+      <view class="pg-btn {{page >= pages ? 'dis' : ''}}" bind:tap="onNext">下一页</view>
+    </view>
+    <view class="anno-switch">
+      <text class="sw-label">{{showAnno ? '批注版' : '原版'}}</text>
+      <switch checked="{{showAnno}}" color="#FF6B35" bindchange="onToggleAnno" />
+      <view class="save-btn" bind:tap="onSavePage">保存本页</view>
+    </view>
+  </view>
+
+  <view class="sync-tip" wx:if="{{synced}}">批注实时同步中</view>
+
+  <view class="page-box">
+    <image id="pageImg" class="page-img" src="{{imgUrl}}" mode="widthFix" bind:load="onImgLoad" />
+    <canvas type="2d" id="ink" class="ink" style="width:{{cvW}}px;height:{{cvH}}px;"></canvas>
+  </view>
+</view>
