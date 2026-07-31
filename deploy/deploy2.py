@@ -13,6 +13,15 @@ NODE_BIN = creds.NODE_BIN
 LOCAL_SERVER = r'c:\Users\27806\Desktop\xuexi\server'
 REMOTE_TMP = '/tmp/canto-src'
 
+# ---------- 0. 部署前门禁：先本地预演（语法+启服+冒烟），不过不传 ----------
+# 把首次反馈从“生产”提前到“本地”；应急可用 --skip-verify 跳过
+if '--skip-verify' not in sys.argv:
+    import subprocess
+    _v = subprocess.run([sys.executable, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'verify_local.py')])
+    if _v.returncode != 0:
+        sys.exit('[部署中止] 本地预演未通过，已阻止上传到生产。修复后重试，或用 --skip-verify 强制跳过。')
+    print('\n── 本地预演通过，开始部署 ──\n')
+
 ssh = paramiko.SSHClient()
 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 ssh.connect(hostname=HOST, port=22, username=creds.SSH_USER, password=PASSWORD, timeout=15)
